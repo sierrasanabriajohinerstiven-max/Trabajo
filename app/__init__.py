@@ -21,10 +21,7 @@ def create_app(config_class: type = Config) -> Flask:
 
     # --- Modelos (necesarios para que las migraciones los vean) ---
     from app.models import usuario  # noqa: F401
-    from app.proveedores import models as modelos_proveedores  # noqa: F401
-    from app.inventario import models as modelos_inventario  # noqa: F401
-    from app.ventas import models as modelos_ventas  # noqa: F401
-    from app.facturas import models as modelos_facturas  # noqa: F401
+    from app.facturas import models as facturas_models  # noqa: F401
 
     # --- Blueprints ---
     # Dashboard / menú principal (compartido)

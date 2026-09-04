@@ -1,9 +1,4 @@
-"""Modelos de datos del módulo facturas.
-
-Responsable: Persona A
-
-Una factura se emite a partir de una venta ya registrada (relación 1 a 1).
-"""
+"""Modelo de datos de facturas."""
 from app.extensions import db
 from app.utils import ahora_utc
 
@@ -21,5 +16,3 @@ class Factura(db.Model):
 
     def __repr__(self) -> str:
         return f"<Factura {self.numero}>"
-
-    # TODO (Persona A): datos del cliente, impuestos, estado (emitida/anulada).

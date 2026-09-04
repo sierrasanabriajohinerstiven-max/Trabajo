@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>{{ factura.numero }}</title></head>
+<body>
+  <main>
+    <h1>Factura {{ factura.numero }}</h1>
+    <p><strong>Cliente:</strong> {{ factura.cliente }}</p>
+    <p><strong>Fecha:</strong> {{ factura.fecha.strftime('%d/%m/%Y') }}</p>
+    <p><strong>Estado:</strong> {{ factura.estado }}</p>
+    <hr>
+    <h2>Total: {{ '%.2f'|format(factura.total) }}</h2>
+  </main>
+  <script>window.addEventListener('load', () => window.print())</script>
+</body>
+</html>
