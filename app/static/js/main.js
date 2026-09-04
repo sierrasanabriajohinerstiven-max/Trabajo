@@ -5,23 +5,25 @@
 // --- Menú lateral (sidebar) ---
 document.addEventListener("DOMContentLoaded", function () {
   var boton = document.getElementById("menu-toggle");
-  var sidebar = document.getElementById("sidebar");
   var overlay = document.getElementById("sidebar-overlay");
 
-  if (!boton || !sidebar || !overlay) return;
+  if (!boton) return;
 
-  function alternarMenu() {
-    var abierto = sidebar.classList.toggle("abierto");
-    overlay.classList.toggle("visible", abierto);
+  function aplicarEstado(abierto) {
+    document.body.classList.toggle("menu-abierto", abierto);
     boton.setAttribute("aria-expanded", abierto ? "true" : "false");
   }
 
-  function cerrarMenu() {
-    sidebar.classList.remove("abierto");
-    overlay.classList.remove("visible");
-    boton.setAttribute("aria-expanded", "false");
-  }
+  // En pantallas anchas el menú arranca visible; en móvil, oculto.
+  aplicarEstado(window.innerWidth >= 992);
 
-  boton.addEventListener("click", alternarMenu);
-  overlay.addEventListener("click", cerrarMenu);
+  boton.addEventListener("click", function () {
+    aplicarEstado(!document.body.classList.contains("menu-abierto"));
+  });
+
+  if (overlay) {
+    overlay.addEventListener("click", function () {
+      aplicarEstado(false);
+    });
+  }
 });
