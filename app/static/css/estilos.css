@@ -546,13 +546,12 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.9rem;
 }
 
-/* --- Módulo proveedores (prefijo .prov-) ---
 /* --- Componentes compartidos + módulo proveedores ---
-   Los estilos los introdujo el módulo de proveedores; cada regla lleva
-   ademas un nombre generico (sin el prefijo .prov-) para que inventario,
-   ventas y facturas reutilicen el MISMO diseño sin duplicar CSS. */
-   Reutiliza .panel, .tabla, .vacio y .seccion-titulo del sistema general;
-   aquí solo van las piezas propias del módulo. */
+   Estas reglas las introdujo el módulo de proveedores. Cada una lleva
+   además un nombre genérico (el mismo selector sin el prefijo .prov-)
+   para que inventario, ventas y facturas reutilicen el MISMO diseño sin
+   duplicar CSS. Las plantillas de proveedores siguen funcionando igual.
+   Reutiliza .panel, .tabla, .vacio y .seccion-titulo del sistema general. */
 .encabezado,
 .prov-encabezado {
   display: flex;
