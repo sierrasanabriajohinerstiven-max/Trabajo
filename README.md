@@ -101,10 +101,12 @@ calcular ventas del mes, productos más vendidos y valor del inventario.
 
 ## Primeras tareas de cada persona
 
-- **Persona A**: implementar el `login` real en `app/auth/routes.py` — hoy
-  es un placeholder sin formulario, así que **nadie puede entrar al sistema
-  todavía** (todas las vistas son `@login_required`). El `logout` ya
-  funciona. Después, CRUD de `Factura`.
+- **Persona A**: implementar el `login` real en `app/auth/routes.py` (hoy es
+  un placeholder sin formulario). ⚠️ Mientras tanto **el candado está
+  quitado**: las vistas NO tienen `@login_required` para poder navegar el
+  panel. Al terminar el login hay que volver a ponerlo — cada archivo
+  afectado tiene la nota `TODO (Persona A)`. El `logout` ya funciona.
+  Después, CRUD de `Factura`.
 - **Persona B**: CRUD de `Producto` en `app/inventario/` y de `Proveedor`
   en `app/proveedores/` (un proveedor abastece varios productos).
 - **Persona C**: CRUD de `Venta` en `app/ventas/` (una venta descuenta
