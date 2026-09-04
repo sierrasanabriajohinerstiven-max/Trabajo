@@ -7,22 +7,29 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="{{ url_for('main.index') }}">Inicio</a>
-      <a href="{{ url_for('facturas.index') }}">Facturas</a>
-      <a href="{{ url_for('inventario.index') }}">Inventario</a>
-      <a href="{{ url_for('ventas.index') }}">Ventas</a>
-      <a href="{{ url_for('proveedores.index') }}">Proveedores</a>
-      {% if current_user.is_authenticated %}
-        <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
-      {% else %}
-        <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
-      {% endif %}
-    </nav>
-  </header>
+  <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">
+    ☰
+  </button>
 
-  <main>
+  <nav id="sidebar" class="sidebar">
+    <a href="{{ url_for('main.index') }}" class="sidebar-brand">🖥️ Sistema</a>
+
+    <a href="{{ url_for('main.index') }}">🏠 Inicio</a>
+    <a href="{{ url_for('facturas.index') }}">🧾 Facturas</a>
+    <a href="{{ url_for('inventario.index') }}">📦 Inventario</a>
+    <a href="{{ url_for('ventas.index') }}">💵 Ventas</a>
+    <a href="{{ url_for('proveedores.index') }}">🚚 Proveedores</a>
+
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('auth.logout') }}">🚪 Cerrar sesión</a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}">🔑 Iniciar sesión</a>
+    {% endif %}
+  </nav>
+
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <main class="content">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for categoria, mensaje in messages %}
         <div class="flash flash-{{ categoria }}">{{ mensaje }}</div>
@@ -30,6 +37,8 @@
     {% endwith %}
 
     {% block content %}{% endblock %}
+
+    <footer class="watermark">D1</footer>
   </main>
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
