@@ -54,9 +54,11 @@ def client(app, usuario_id):
     return client
 
 
-def test_index_requiere_login(app):
+def test_index_accesible_sin_login(app):
+    # NOTA: el candado está quitado en todo el sistema mientras Persona A
+    # implementa el login real (ver README y el TODO en routes.py).
     resp = app.test_client().get("/ventas/")
-    assert resp.status_code == 302
+    assert resp.status_code == 200
 
 
 def test_index_vacio(client):
@@ -75,6 +77,19 @@ def test_iniciar_venta(app, client, usuario_id):
         assert ventas[0].cliente == "Ana"
         assert ventas[0].usuario_id == usuario_id
         assert float(ventas[0].total) == 0.0
+
+
+def test_iniciar_venta_sin_sesion_no_falla(app):
+    # Sin login todavía no hay current_user; usuario_id debe quedar en None
+    # en vez de reventar con un AttributeError.
+    resp = app.test_client().post(
+        "/ventas/nueva", data={"cliente": "Mostrador"}, follow_redirects=True
+    )
+    assert resp.status_code == 200
+
+    with app.app_context():
+        venta = Venta.query.first()
+        assert venta.usuario_id is None
 
 
 def test_agregar_linea_descuenta_stock_y_suma_total(app, client, usuario_id, producto_id):

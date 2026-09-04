@@ -15,13 +15,16 @@ Endpoints:
     POST      /ventas/<id>/eliminar                 elimina la venta y repone el stock
 """
 from flask import flash, redirect, render_template, url_for
-from flask_login import current_user, login_required
+from flask_login import current_user
 
 from app.extensions import db
 from app.inventario.models import Producto
 from app.ventas import bp
 from app.ventas.forms import DetalleVentaForm, EliminarForm, VentaForm
 from app.ventas.models import DetalleVenta, Venta
+
+# NOTA: vistas temporalmente SIN @login_required mientras Persona A
+# implementa el login (ver README). TODO (Persona A): volver a protegerlas.
 
 
 def _opciones_producto():
@@ -31,21 +34,19 @@ def _opciones_producto():
 
 
 @bp.route("/")
-@login_required
 def index():
     ventas = Venta.query.order_by(Venta.fecha.desc()).all()
     return render_template("ventas/listado.html", ventas=ventas)
 
 
 @bp.route("/nueva", methods=["GET", "POST"])
-@login_required
 def nueva():
     form = VentaForm()
 
     if form.validate_on_submit():
         venta = Venta(
             cliente=(form.cliente.data or "").strip() or None,
-            usuario_id=current_user.id,
+            usuario_id=current_user.id if current_user.is_authenticated else None,
         )
         db.session.add(venta)
         db.session.commit()
@@ -56,7 +57,6 @@ def nueva():
 
 
 @bp.route("/<int:venta_id>")
-@login_required
 def detalle(venta_id):
     venta = db.get_or_404(Venta, venta_id)
     form = DetalleVentaForm()
@@ -70,7 +70,6 @@ def detalle(venta_id):
 
 
 @bp.route("/<int:venta_id>/lineas", methods=["POST"])
-@login_required
 def agregar_linea(venta_id):
     venta = db.get_or_404(Venta, venta_id)
     form = DetalleVentaForm()
@@ -112,7 +111,6 @@ def agregar_linea(venta_id):
 
 
 @bp.route("/<int:venta_id>/eliminar", methods=["POST"])
-@login_required
 def eliminar(venta_id):
     venta = db.get_or_404(Venta, venta_id)
     form = EliminarForm()

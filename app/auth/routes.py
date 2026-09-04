@@ -21,7 +21,8 @@ def login():
 @bp.route("/logout")
 def logout():
     """Cierra la sesión. Sin @login_required para que el enlace del menú
-    funcione siempre y no rebote al login cuando no hay sesión activa."""
+    funcione siempre y no rebote cuando no hay sesión activa."""
     logout_user()
     flash("Sesión cerrada correctamente.", "info")
-    return redirect(url_for("auth.login"))
+    # TODO (Persona A): cuando exista el login real, redirigir a auth.login.
+    return redirect(url_for("main.index"))
