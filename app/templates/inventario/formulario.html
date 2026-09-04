@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar producto' if producto else 'Nuevo producto' }}{% endblock %}
+
+{% macro campo(f, extra='') %}
+  <div class="campo">
+    {{ f.label }}
+    {{ f(**{'class': extra}) if extra else f() }}
+    {% for error in f.errors %}<span class="error">{{ error }}</span>{% endfor %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+  <h1 class="seccion-titulo">
+    <svg class="icono icono--inventario"><use href="#i-inventario"></use></svg>
+    {{ 'Editar producto' if producto else 'Nuevo producto' }}
+  </h1>
+  <p class="subtitulo">
+    {{ 'Modifica los datos y guarda los cambios.' if producto else 'Completa los datos del producto.' }}
+  </p>
+
+  <div class="panel">
+    <form class="formulario" method="post" novalidate>
+      {{ form.hidden_tag() }}
+
+      {{ campo(form.nombre) }}
+
+      <div class="campo-fila">
+        {{ campo(form.sku) }}
+        {{ campo(form.proveedor_id) }}
+      </div>
+
+      {{ campo(form.descripcion) }}
+
+      <div class="campo-fila">
+        {{ campo(form.precio) }}
+        {{ campo(form.stock) }}
+      </div>
+
+      <div class="campo">
+        <label>{{ form.activo() }} {{ form.activo.label.text }}</label>
+      </div>
+
+      <div class="formulario-acciones">
+        <button class="btn btn-primario" type="submit">
+          <svg class="icono icono--agregar"><use href="#i-guardar"></use></svg>
+          {{ 'Guardar cambios' if producto else 'Agregar producto' }}
+        </button>
+        <a class="btn" href="{{ url_for('inventario.index') }}">
+          <svg class="icono"><use href="#i-volver"></use></svg> Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

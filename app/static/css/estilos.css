@@ -16,6 +16,7 @@
   --radio: 0.625rem;
   --sombra: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.06);
   --ancho-sidebar: 236px;
+  --ancho-sidebar-min: 64px;   /* menú colapsado: solo iconos */
   --alto-topbar: 56px;
 }
 
@@ -65,22 +66,29 @@ h1 {
   border-bottom: 1px solid var(--color-borde);
 }
 
+/* Botón de menú: va dentro del contenido, debajo de la barra superior */
 .menu-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 1.25rem;
   border: 1px solid var(--color-borde);
   border-radius: 0.5rem;
   background: var(--color-superficie);
   color: var(--color-texto);
-  font-size: 1.1rem;
+  box-shadow: var(--sombra);
   cursor: pointer;
 }
 
 .menu-toggle:hover {
   background: var(--color-fondo);
+}
+
+.menu-toggle .icono {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .topbar-marca {
@@ -412,3 +420,217 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.925rem;
 }
 
+
+/* --- Botones --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.5rem;
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--color-fondo);
+}
+
+.btn-primario {
+  background: var(--color-marca);
+  border-color: var(--color-marca);
+  color: #ffffff;
+}
+
+.btn-primario:hover {
+  background: #1d4ed8;
+}
+
+.btn-peligro {
+  color: #b91c1c;
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.btn-peligro:hover {
+  background: #fee2e2;
+}
+
+.btn-icono {
+  padding: 0.35rem 0.5rem;
+}
+
+.btn-icono .icono {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+/* --- Barra de acciones (buscador + botón agregar) --- */
+.barra-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 260px;
+  max-width: 420px;
+  padding: 0 0.75rem;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: 0.5rem;
+}
+
+.buscador .icono {
+  color: var(--color-texto-suave);
+  flex: none;
+}
+
+.buscador input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.925rem;
+  color: inherit;
+}
+
+/* --- Formularios --- */
+.formulario {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  max-width: 560px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.campo label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.5rem;
+  background: var(--color-superficie);
+  font: inherit;
+  font-size: 0.925rem;
+  color: inherit;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: 2px solid var(--color-marca);
+  outline-offset: -1px;
+}
+
+.campo .error {
+  font-size: 0.8125rem;
+  color: #b91c1c;
+}
+
+.campo-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formulario-acciones {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+/* --- Acciones dentro de la tabla --- */
+.tabla .acciones {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.tabla .acciones form {
+  display: inline;
+}
+
+.etiqueta-stock {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.etiqueta-stock.bajo {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.etiqueta-stock.ok {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.flash-success {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.flash-danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+/* --- Color de los iconos por sección ---
+   Va al final del archivo a propósito: así gana sobre los colores por
+   defecto de tarjetas, paneles y títulos (misma especificidad, va después). */
+.icono.icono--dashboard { color: #2563eb; }
+.icono.icono--facturas { color: #7c3aed; }
+.icono.icono--inventario { color: #d97706; }
+.icono.icono--ventas { color: #059669; }
+.icono.icono--proveedores { color: #0891b2; }
+.icono.icono--salir { color: #dc2626; }
+.icono.icono--alerta { color: #dc2626; }
+.icono.icono--estrella { color: #d97706; }
+.icono.icono--reloj { color: #0891b2; }
+.icono.icono--editar { color: #2563eb; }
+.icono.icono--eliminar { color: #dc2626; }
+.icono.icono--agregar { color: #ffffff; }
+
+/* En el menú oscuro se usan tonos más claros para que contrasten */
+.sidebar .icono.icono--dashboard { color: #60a5fa; }
+.sidebar .icono.icono--facturas { color: #a78bfa; }
+.sidebar .icono.icono--inventario { color: #fbbf24; }
+.sidebar .icono.icono--ventas { color: #34d399; }
+.sidebar .icono.icono--proveedores { color: #22d3ee; }
+.sidebar .icono.icono--salir { color: #f87171; }
+
+/* La sección activa tiene fondo azul: sus iconos van en blanco */
+.sidebar a.activo .icono.icono--dashboard,
+.sidebar a.activo .icono.icono--facturas,
+.sidebar a.activo .icono.icono--inventario,
+.sidebar a.activo .icono.icono--ventas,
+.sidebar a.activo .icono.icono--proveedores { color: #ffffff; }

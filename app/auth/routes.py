@@ -25,4 +25,4 @@ def logout():
     logout_user()
     flash("Sesión cerrada correctamente.", "info")
     # TODO (Persona A): cuando exista el login real, redirigir a auth.login.
-    return redirect(url_for("main.index"))
+    return redirect(url_for("main.dashboard"))
