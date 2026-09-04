@@ -5,7 +5,7 @@ from app.extensions import db
 
 
 class Factura(db.Model):
-	__tablename__ = "facturas"
+    __tablename__ = "facturas"
 
     id = db.Column(db.Integer, primary_key=True)
     numero = db.Column(db.String(40), unique=True, nullable=False)
