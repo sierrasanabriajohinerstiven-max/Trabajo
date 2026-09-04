@@ -51,4 +51,8 @@ def create_app(config_class: type = Config) -> Flask:
     from app.ventas import bp as ventas_bp
     app.register_blueprint(ventas_bp, url_prefix="/ventas")
 
+    # --- Comandos de consola (flask datos-demo) ---
+    from app.cli import registrar_comandos
+    registrar_comandos(app)
+
     return app

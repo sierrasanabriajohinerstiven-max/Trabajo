@@ -10,9 +10,10 @@ __pycache__/
 # Variables de entorno
 .env
 
-# Base de datos local
+# Base de datos local (el esquema se versiona en migrations/, no la base)
 instance/*.db
 instance/*.sqlite3
+instance/*respaldo*
 
 # Editor / SO
 .vscode/

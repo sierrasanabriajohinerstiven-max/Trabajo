@@ -13,11 +13,29 @@ python -m venv .venv
 .venv\Scripts\activate        # Windows
 pip install -r requirements.txt
 copy .env.example .env        # y completar SECRET_KEY
-flask db init                 # solo la primera vez
-flask db migrate -m "inicial"
-flask db upgrade
+flask db upgrade              # crea/actualiza las tablas
+flask datos-demo              # opcional: carga datos de ejemplo
 python run.py
 ```
+
+> **¿Tienes un `instance/app.db` de antes del 4/sep?** Ese archivo se creó sin
+> migraciones y le faltan columnas (`proveedores.contacto`, `productos.creado_en`...),
+> lo que hace que Inventario, Proveedores y Ventas den **error 500**.
+> Solución: detén el servidor, renombra o borra `instance/app.db` y vuelve a
+> correr `flask db upgrade`.
+
+## Base de datos y migraciones
+
+El esquema se versiona con Flask-Migrate: **nunca** edites las tablas a mano ni
+uses `db.create_all()`.
+
+```bash
+flask db migrate -m "que cambiaste"   # tras tocar un models.py
+flask db upgrade                       # aplica los cambios
+```
+
+Cuando cambies un modelo, genera la migración y **súbela junto con el código**;
+así los demás solo corren `flask db upgrade` y no se les desincroniza la base.
 
 ## División del equipo (3 personas)
 
