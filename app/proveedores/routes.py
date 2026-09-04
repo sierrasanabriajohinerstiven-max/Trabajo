@@ -13,7 +13,6 @@ Endpoints:
 Responsable: Persona B
 """
 from flask import flash, redirect, render_template, request, url_for
-from flask_login import login_required
 
 from app.extensions import db
 from app.proveedores import bp
@@ -26,9 +25,12 @@ ESTADOS = (
     ("inactivos", "Inactivos"),
 )
 
+# NOTA: igual que el resto de secciones, estas vistas están temporalmente SIN
+# @login_required mientras Persona A implementa el login.
+# TODO (Persona A): volver a protegerlas.
+
 
 @bp.route("/")
-@login_required
 def index():
     termino = request.args.get("q", "", type=str).strip()
     estado = request.args.get("estado", "todos", type=str)
@@ -50,7 +52,6 @@ def index():
 
 
 @bp.route("/nuevo", methods=["GET", "POST"])
-@login_required
 def nuevo():
     form = ProveedorForm()
 
@@ -67,7 +68,6 @@ def nuevo():
 
 
 @bp.route("/<int:proveedor_id>")
-@login_required
 def detalle(proveedor_id: int):
     proveedor = db.get_or_404(Proveedor, proveedor_id)
     return render_template(
@@ -78,7 +78,6 @@ def detalle(proveedor_id: int):
 
 
 @bp.route("/<int:proveedor_id>/editar", methods=["GET", "POST"])
-@login_required
 def editar(proveedor_id: int):
     proveedor = db.get_or_404(Proveedor, proveedor_id)
     form = ProveedorForm(obj=proveedor, proveedor_id=proveedor.id)
@@ -98,7 +97,6 @@ def editar(proveedor_id: int):
 
 
 @bp.route("/<int:proveedor_id>/estado", methods=["POST"])
-@login_required
 def cambiar_estado(proveedor_id: int):
     """Activa o desactiva el proveedor sin borrar su historial."""
     proveedor = db.get_or_404(Proveedor, proveedor_id)
@@ -115,7 +113,6 @@ def cambiar_estado(proveedor_id: int):
 
 
 @bp.route("/<int:proveedor_id>/eliminar", methods=["POST"])
-@login_required
 def eliminar(proveedor_id: int):
     proveedor = db.get_or_404(Proveedor, proveedor_id)
     form = EliminarProveedorForm()

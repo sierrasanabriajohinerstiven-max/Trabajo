@@ -14,9 +14,6 @@ class ConfigPruebas(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite://"  # base en memoria
     WTF_CSRF_ENABLED = False
-    # El login real es tarea de Persona A; aquí se desactiva para poder
-    # probar las vistas de proveedores de forma aislada.
-    LOGIN_DISABLED = True
 
 
 @pytest.fixture

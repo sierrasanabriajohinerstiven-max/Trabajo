@@ -28,18 +28,11 @@
 
   {# --- Menú lateral --- #}
   <nav id="sidebar" class="sidebar" aria-label="Menú principal">
-    <div class="sidebar-perfil">
-      <span class="sidebar-perfil-avatar">
-        <svg class="icono"><use href="#i-usuario"></use></svg>
-      </span>
-      <span class="sidebar-perfil-datos">
-        <strong>Administrador</strong>
-        <small>{{ current_user.email if current_user.is_authenticated else 'Panel D1' }}</small>
-      </span>
-    </div>
-
-    <a href="{{ url_for('main.index') }}" class="{{ 'activo' if request.blueprint == 'main' }}">
+    <a href="{{ url_for('main.index') }}" class="{{ 'activo' if request.endpoint == 'main.index' }}">
       <svg class="icono"><use href="#i-inicio"></use></svg> Inicio
+    </a>
+    <a href="{{ url_for('main.dashboard') }}" class="{{ 'activo' if request.endpoint == 'main.dashboard' }}">
+      <svg class="icono"><use href="#i-tablero"></use></svg> Dashboard
     </a>
     <a href="{{ url_for('facturas.index') }}" class="{{ 'activo' if request.blueprint == 'facturas' }}">
       <svg class="icono"><use href="#i-facturas"></use></svg> Facturas
@@ -54,11 +47,18 @@
       <svg class="icono"><use href="#i-proveedores"></use></svg> Proveedores
     </a>
 
-    <span class="sidebar-separador" aria-hidden="true"></span>
-
-    <a class="sidebar-salir" href="{{ url_for('auth.logout') }}">
-      <svg class="icono"><use href="#i-salir"></use></svg> Cerrar sesión
-    </a>
+    {# --- Perfil, siempre al final del menú --- #}
+    <div class="sidebar-pie">
+      <span class="sidebar-perfil-avatar">
+        <svg class="icono"><use href="#i-usuario"></use></svg>
+      </span>
+      <span class="sidebar-perfil-nombre">
+        {{ current_user.nombre if current_user.is_authenticated else 'Administrador' }}
+      </span>
+      <a class="sidebar-salir" href="{{ url_for('auth.logout') }}">
+        <svg class="icono"><use href="#i-salir"></use></svg> Cerrar sesión
+      </a>
+    </div>
   </nav>
 
   <div id="sidebar-overlay" class="sidebar-overlay"></div>
