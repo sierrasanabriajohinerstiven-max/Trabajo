@@ -36,13 +36,13 @@
 
   <div class="panel">
     {% if proveedores %}
+      <div class="prov-tabla-scroll">
       <table class="tabla">
         <thead>
           <tr>
             <th>Nombre</th>
             <th>NIT</th>
             <th>Contacto</th>
-            <th>Teléfono</th>
             <th>Ciudad</th>
             <th class="numero">Productos</th>
             <th>Estado</th>
@@ -52,14 +52,13 @@
         <tbody>
           {% for proveedor in proveedores %}
             <tr>
-              <td>
+              <td class="prov-col-nombre">
                 <a href="{{ url_for('proveedores.detalle', proveedor_id=proveedor.id) }}">
                   {{ proveedor.nombre }}
                 </a>
               </td>
               <td>{{ proveedor.nit }}</td>
               <td>{{ proveedor.contacto or '—' }}</td>
-              <td>{{ proveedor.telefono or '—' }}</td>
               <td>{{ proveedor.ciudad or '—' }}</td>
               <td class="numero">{{ proveedor.productos | length }}</td>
               <td>
@@ -81,6 +80,7 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
     {% else %}
       <p class="vacio">
         {% if termino or estado != 'todos' %}

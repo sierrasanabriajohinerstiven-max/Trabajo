@@ -540,6 +540,37 @@ body.menu-abierto .sidebar-overlay {
   background: #fef2f2;
 }
 
+/* La tabla tiene muchas columnas: se desplaza dentro del panel en vez de
+   desbordar la página. */
+.prov-tabla-scroll {
+  overflow-x: auto;
+}
+
+.prov-tabla-scroll .tabla {
+  min-width: 780px;
+}
+
+/* Con 7 columnas el padding por defecto de .tabla no cabe en el ancho útil. */
+.prov-tabla-scroll .tabla th,
+.prov-tabla-scroll .tabla td {
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.prov-tabla-scroll .tabla th:first-child,
+.prov-tabla-scroll .tabla td:first-child {
+  padding-left: 1.25rem;
+}
+
+.prov-tabla-scroll .tabla th:last-child,
+.prov-tabla-scroll .tabla td:last-child {
+  padding-right: 1.25rem;
+}
+
+.prov-col-nombre {
+  white-space: nowrap;
+}
+
 .prov-acciones-fila {
   white-space: nowrap;
   text-align: right;
