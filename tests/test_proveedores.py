@@ -6,6 +6,7 @@ from app import create_app
 from app.config import Config
 from app.extensions import db
 from app.proveedores.forms import ProveedorForm
+from app.inventario.models import Producto
 from app.proveedores.models import Proveedor
 
 
@@ -174,3 +175,32 @@ def test_eliminar_proveedor(client, proveedor):
 
 def test_eliminar_solo_acepta_post(client, proveedor):
     assert client.get(f"/proveedores/{proveedor.id}/eliminar").status_code == 405
+
+
+# --- Relación con inventario ---
+
+def test_proveedor_lista_sus_productos(app, proveedor):
+    db.session.add(Producto(nombre="Arroz 500g", sku="ARR-500", proveedor=proveedor))
+    db.session.commit()
+
+    assert [p.nombre for p in proveedor.productos] == ["Arroz 500g"]
+
+
+def test_no_elimina_proveedor_con_productos(client, app, proveedor):
+    db.session.add(Producto(nombre="Arroz 500g", proveedor=proveedor))
+    db.session.commit()
+
+    respuesta = client.post(
+        f"/proveedores/{proveedor.id}/eliminar", follow_redirects=True
+    )
+    assert "No se puede eliminar" in respuesta.get_data(as_text=True)
+    assert Proveedor.query.count() == 1
+
+
+def test_detalle_muestra_los_productos(client, app, proveedor):
+    db.session.add(Producto(nombre="Arroz 500g", sku="ARR-500", proveedor=proveedor))
+    db.session.commit()
+
+    texto = client.get(f"/proveedores/{proveedor.id}").get_data(as_text=True)
+    assert "Arroz 500g" in texto
+    assert "ARR-500" in texto

@@ -4,10 +4,13 @@ Un proveedor es la empresa o persona que abastece los productos del
 inventario. Se identifica de forma única por su NIT.
 
 Responsable: Persona B
-"""
-from datetime import datetime
 
+NOTA: este modelo es el "contrato" de datos base del sistema (otros módulos
+lo referencian). Amplíalo con los campos que necesites, pero evita renombrar
+la tabla o la clave primaria sin avisar al equipo.
+"""
 from app.extensions import db
+from app.utils import ahora_utc
 
 
 class Proveedor(db.Model):
@@ -19,12 +22,12 @@ class Proveedor(db.Model):
 
     # --- Identificación ---
     nombre = db.Column(db.String(120), nullable=False)
-    nit = db.Column(db.String(30), unique=True, nullable=False, index=True)
+    nit = db.Column(db.String(40), unique=True, nullable=False, index=True)
 
     # --- Contacto ---
     contacto = db.Column(db.String(120))
     email = db.Column(db.String(120))
-    telefono = db.Column(db.String(30))
+    telefono = db.Column(db.String(40))
 
     # --- Ubicación ---
     direccion = db.Column(db.String(200))
@@ -35,18 +38,13 @@ class Proveedor(db.Model):
     notas = db.Column(db.Text)
 
     # --- Auditoría ---
-    creado_en = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    creado_en = db.Column(db.DateTime, nullable=False, default=ahora_utc)
     actualizado_en = db.Column(
-        db.DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        db.DateTime, nullable=False, default=ahora_utc, onupdate=ahora_utc
     )
 
-    # TODO (Persona B): cuando exista el modelo Producto en app/inventario/,
-    # agregar aquí la relación inversa:
-    #     productos = db.relationship("Producto", back_populates="proveedor")
-    # y en Producto un campo proveedor_id (ForeignKey a "proveedores.id").
+    # Productos de inventario que abastece este proveedor.
+    productos = db.relationship("Producto", back_populates="proveedor")
 
     def __repr__(self) -> str:  # pragma: no cover - solo ayuda al depurar
         return f"<Proveedor {self.nit} {self.nombre}>"

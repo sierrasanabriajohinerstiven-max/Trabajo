@@ -78,17 +78,37 @@ carpeta, minimizando conflictos de merge. Los únicos archivos **compartidos**
 - `app/models/usuario.py`
 - `app/templates/base.html`
 
+## Esquema de datos (contrato compartido)
+
+Los modelos base ya están definidos para que el resumen del panel pueda
+calcular sus indicadores. **No los redefinas**: constrúyele encima (agrega
+campos, validaciones, CRUD). Si necesitas renombrar una tabla o una clave,
+avisa al equipo antes.
+
+| Modelo | Archivo | Dueño |
+|---|---|---|
+| `Usuario` | `app/models/usuario.py` | compartido |
+| `Proveedor` | `app/proveedores/models.py` | Persona B |
+| `Producto` | `app/inventario/models.py` | Persona B |
+| `Venta`, `DetalleVenta` | `app/ventas/models.py` | Persona C |
+| `Factura` | `app/facturas/models.py` | Persona A |
+
+Relaciones: `Proveedor 1—N Producto` · `Venta 1—N DetalleVenta N—1 Producto`
+· `Venta 1—1 Factura` · `Venta N—1 Usuario`.
+
+El resumen del panel (`app/main/services.py`) consulta estas tablas para
+calcular ventas del mes, productos más vendidos y valor del inventario.
+
 ## Primeras tareas de cada persona
 
-- **Persona A**: implementar `login`/`logout` reales en `app/auth/routes.py`
-  (hoy es un placeholder; `base.html` ya referencia `auth.logout`, así que
-  sin esa ruta la app no renderiza ninguna página — es la primera tarea a
-  resolver). Luego el modelo y CRUD de `Factura` en `app/facturas/`.
-- **Persona B**: modelo y CRUD de `Producto` en `app/inventario/`, y de
-  `Proveedor` en `app/proveedores/` (un proveedor puede abastecer varios
-  productos).
-- **Persona C**: modelo y CRUD de `Venta` en `app/ventas/` (una venta
-  descuenta stock de Inventario y debe poder generar una Factura).
+- **Persona A**: implementar el `login` real en `app/auth/routes.py` — hoy
+  es un placeholder sin formulario, así que **nadie puede entrar al sistema
+  todavía** (todas las vistas son `@login_required`). El `logout` ya
+  funciona. Después, CRUD de `Factura`.
+- **Persona B**: CRUD de `Producto` en `app/inventario/` y de `Proveedor`
+  en `app/proveedores/` (un proveedor abastece varios productos).
+- **Persona C**: CRUD de `Venta` en `app/ventas/` (una venta descuenta
+  stock del Producto y debe poder generar una Factura).
 
 ## Convenciones
 

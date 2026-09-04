@@ -124,8 +124,17 @@ def eliminar(proveedor_id: int):
         flash("No se pudo eliminar el proveedor.", "error")
         return redirect(url_for("proveedores.detalle", proveedor_id=proveedor.id))
 
-    # TODO (Persona B): cuando Producto tenga proveedor_id, impedir el borrado
-    # si el proveedor todavía abastece productos y sugerir desactivarlo.
+    # Un proveedor con productos en inventario no se borra: dejaría esos
+    # productos sin origen. Se sugiere desactivarlo, que conserva el historial.
+    if proveedor.productos:
+        flash(
+            f"No se puede eliminar «{proveedor.nombre}»: abastece "
+            f"{len(proveedor.productos)} producto(s) del inventario. "
+            "Desactívalo si ya no le compras.",
+            "error",
+        )
+        return redirect(url_for("proveedores.detalle", proveedor_id=proveedor.id))
+
     nombre = proveedor.nombre
     db.session.delete(proveedor)
     db.session.commit()

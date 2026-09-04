@@ -1,13 +1,84 @@
 {% extends "base.html" %}
 {% block title %}Inicio{% endblock %}
 {% block content %}
-  <h1>🏠 Panel principal</h1>
-  <p>Elige una sección:</p>
+  <h1 class="seccion-titulo">
+    <svg class="icono"><use href="#i-inicio"></use></svg> Panel de administrador
+  </h1>
+  <p class="subtitulo">Resumen del negocio y accesos rápidos.</p>
 
+  {# --- Indicadores --- #}
+  <div class="resumen-grid">
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado">
+        <svg class="icono"><use href="#i-tendencia"></use></svg> Ventas de este mes
+      </div>
+      <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.ventas_mes.total) }}</div>
+      <div class="tarjeta-detalle">
+        {{ resumen.ventas_mes.cantidad }}
+        venta{{ '' if resumen.ventas_mes.cantidad == 1 else 's' }} registrada{{ '' if resumen.ventas_mes.cantidad == 1 else 's' }}
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado">
+        <svg class="icono"><use href="#i-etiqueta"></use></svg> Valor del inventario
+      </div>
+      <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.inventario.valor) }}</div>
+      <div class="tarjeta-detalle">
+        {{ resumen.inventario.unidades }} unidades · {{ resumen.inventario.referencias }} referencias
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado">
+        <svg class="icono"><use href="#i-estrella"></use></svg> Producto más vendido
+      </div>
+      {% if resumen.mas_vendidos %}
+        <div class="tarjeta-valor">{{ resumen.mas_vendidos[0].nombre }}</div>
+        <div class="tarjeta-detalle">{{ resumen.mas_vendidos[0].unidades }} unidades este mes</div>
+      {% else %}
+        <div class="tarjeta-valor">—</div>
+        <div class="tarjeta-detalle">Sin ventas registradas este mes</div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# --- Productos más vendidos --- #}
+  <section class="panel">
+    <h2 class="panel-titulo">
+      <svg class="icono"><use href="#i-estrella"></use></svg> Productos más vendidos del mes
+    </h2>
+
+    {% if resumen.mas_vendidos %}
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="numero">Unidades</th>
+            <th class="numero">Ingresos</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in resumen.mas_vendidos %}
+            <tr>
+              <td>{{ producto.nombre }}</td>
+              <td class="numero">{{ producto.unidades }}</td>
+              <td class="numero">$ {{ "{:,.2f}".format(producto.ingresos) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="vacio">Todavía no hay ventas registradas este mes.</p>
+    {% endif %}
+  </section>
+
+  {# --- Accesos rápidos --- #}
+  <h2 class="seccion-titulo" style="font-size: 1.1rem; margin-bottom: 0.75rem;">Accesos rápidos</h2>
   <div class="dashboard-grid">
     {% for texto, endpoint, icono in secciones %}
       <a class="dashboard-card" href="{{ url_for(endpoint) }}">
-        <span class="dashboard-card-icono">{{ icono }}</span>
+        <svg class="icono"><use href="#{{ icono }}"></use></svg>
         <span class="dashboard-card-texto">{{ texto }}</span>
       </a>
     {% endfor %}

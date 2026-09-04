@@ -1,0 +1,14 @@
+<!-- Logo D1 (recreación en SVG para uso interno del panel).
+     Si tienes el archivo oficial, guárdalo como logo-d1.png en esta misma
+     carpeta y cambia la referencia en app/templates/base.html. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <circle cx="100" cy="100" r="99" fill="#E30613"/>
+  <rect x="30" y="33" width="140" height="134" fill="none" stroke="#ffffff" stroke-width="7"/>
+  <text x="86" y="151" text-anchor="middle" fill="#ffffff"
+        font-family="Arial Black, Arial, Helvetica, sans-serif"
+        font-size="135" font-weight="900">D</text>
+  <circle cx="143" cy="73" r="31" fill="#FFDD00"/>
+  <text x="143" y="92" text-anchor="middle" fill="#003399"
+        font-family="Arial Black, Arial, Helvetica, sans-serif"
+        font-size="54" font-weight="900">1</text>
+</svg>
