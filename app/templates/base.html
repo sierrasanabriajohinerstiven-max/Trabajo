@@ -3,25 +3,67 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}App{% endblock %} · Sistema</title>
+  <title>{% block title %}App{% endblock %} · D1</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo-d1.svg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="{{ url_for('facturas.index') }}">Facturas</a>
-      <a href="{{ url_for('inventario.index') }}">Inventario</a>
-      <a href="{{ url_for('ventas.index') }}">Ventas</a>
-      <a href="{{ url_for('proveedores.index') }}">Proveedores</a>
-      {% if current_user.is_authenticated %}
-        <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
-      {% else %}
-        <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
-      {% endif %}
-    </nav>
+  {% include "_iconos.html" %}
+
+  {# --- Barra superior --- #}
+  <header class="topbar">
+    <button id="menu-toggle" class="menu-toggle" type="button"
+            aria-label="Abrir o cerrar menú" aria-expanded="false" aria-controls="sidebar">
+      <svg class="icono"><use href="#i-menu"></use></svg>
+    </button>
+
+    <a class="topbar-marca" href="{{ url_for('main.index') }}">
+      <img class="topbar-logo" src="{{ url_for('static', filename='img/logo-d1.svg') }}" alt="Logo D1">
+      <span class="topbar-nombre">D1</span>
+    </a>
+
+    <span class="topbar-separador" aria-hidden="true"></span>
+    <span class="topbar-titulo">Panel de administrador</span>
   </header>
 
-  <main>
+  {# --- Menú lateral --- #}
+  <nav id="sidebar" class="sidebar" aria-label="Menú principal">
+    <a href="{{ url_for('main.index') }}" class="{{ 'activo' if request.endpoint == 'main.index' }}">
+      <svg class="icono"><use href="#i-inicio"></use></svg> Inicio
+    </a>
+    <a href="{{ url_for('main.dashboard') }}" class="{{ 'activo' if request.endpoint == 'main.dashboard' }}">
+      <svg class="icono"><use href="#i-tablero"></use></svg> Dashboard
+    </a>
+    <a href="{{ url_for('facturas.index') }}" class="{{ 'activo' if request.blueprint == 'facturas' }}">
+      <svg class="icono"><use href="#i-facturas"></use></svg> Facturas
+    </a>
+    <a href="{{ url_for('inventario.index') }}" class="{{ 'activo' if request.blueprint == 'inventario' }}">
+      <svg class="icono"><use href="#i-inventario"></use></svg> Inventario
+    </a>
+    <a href="{{ url_for('ventas.index') }}" class="{{ 'activo' if request.blueprint == 'ventas' }}">
+      <svg class="icono"><use href="#i-ventas"></use></svg> Ventas
+    </a>
+    <a href="{{ url_for('proveedores.index') }}" class="{{ 'activo' if request.blueprint == 'proveedores' }}">
+      <svg class="icono"><use href="#i-proveedores"></use></svg> Proveedores
+    </a>
+
+    {# --- Perfil, siempre al final del menú --- #}
+    <div class="sidebar-pie">
+      <span class="sidebar-perfil-avatar">
+        <svg class="icono"><use href="#i-usuario"></use></svg>
+      </span>
+      <span class="sidebar-perfil-nombre">
+        {{ current_user.nombre if current_user.is_authenticated else 'Administrador' }}
+      </span>
+      <a class="sidebar-salir" href="{{ url_for('auth.logout') }}">
+        <svg class="icono"><use href="#i-salir"></use></svg> Cerrar sesión
+      </a>
+    </div>
+  </nav>
+
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <main class="contenido">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for categoria, mensaje in messages %}
         <div class="flash flash-{{ categoria }}">{{ mensaje }}</div>

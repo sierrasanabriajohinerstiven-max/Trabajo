@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <h1 class="seccion-titulo">
+    <svg class="icono"><use href="#i-tablero"></use></svg> Dashboard
+  </h1>
+  <p class="subtitulo">Resumen general del D1.</p>
+
+  {# --- Indicadores principales --- #}
+  <div class="resumen-grid">
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado">
+        <svg class="icono"><use href="#i-tendencia"></use></svg> Ventas de este mes
+      </div>
+      <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.ventas_mes.total) }}</div>
+      <div class="tarjeta-detalle">
+        {{ resumen.ventas_mes.cantidad }}
+        venta{{ '' if resumen.ventas_mes.cantidad == 1 else 's' }} registrada{{ '' if resumen.ventas_mes.cantidad == 1 else 's' }}
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado">
+        <svg class="icono"><use href="#i-reloj"></use></svg> Ventas de hoy
+      </div>
+      <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.ventas_hoy.total) }}</div>
+      <div class="tarjeta-detalle">
+        {{ resumen.ventas_hoy.cantidad }}
+        venta{{ '' if resumen.ventas_hoy.cantidad == 1 else 's' }} en el día
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado">
+        <svg class="icono"><use href="#i-etiqueta"></use></svg> Valor del inventario
+      </div>
+      <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.inventario.valor) }}</div>
+      <div class="tarjeta-detalle">
+        {{ resumen.inventario.unidades }} unidades · {{ resumen.inventario.referencias }} referencias
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado">
+        <svg class="icono"><use href="#i-facturas"></use></svg> Facturas del mes
+      </div>
+      <div class="tarjeta-valor">{{ resumen.facturas_mes }}</div>
+      <div class="tarjeta-detalle">{{ resumen.proveedores }} proveedores activos</div>
+    </div>
+  </div>
+
+  {# --- Productos más vendidos --- #}
+  <section class="panel">
+    <h2 class="panel-titulo">
+      <svg class="icono"><use href="#i-estrella"></use></svg> Productos más vendidos del mes
+    </h2>
+
+    {% if resumen.mas_vendidos %}
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="numero">Unidades</th>
+            <th class="numero">Ingresos</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in resumen.mas_vendidos %}
+            <tr>
+              <td>{{ producto.nombre }}</td>
+              <td class="numero">{{ producto.unidades }}</td>
+              <td class="numero">$ {{ "{:,.2f}".format(producto.ingresos) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="vacio">Todavía no hay ventas registradas este mes.</p>
+    {% endif %}
+  </section>
+
+  {# --- Stock bajo --- #}
+  <section class="panel">
+    <h2 class="panel-titulo">
+      <svg class="icono"><use href="#i-alerta"></use></svg> Productos por reponer
+    </h2>
+
+    {% if resumen.stock_bajo %}
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="numero">Stock</th>
+            <th>Proveedor</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in resumen.stock_bajo %}
+            <tr>
+              <td>{{ producto.nombre }}</td>
+              <td class="numero">{{ producto.stock }}</td>
+              <td>{{ producto.proveedor }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="vacio">Ningún producto está por agotarse.</p>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -19,11 +19,14 @@ def create_app(config_class: type = Config) -> Flask:
     migrate.init_app(app, db)
     login_manager.login_view = "auth.login"
 
-    # --- Modelos compartidos (necesarios para que las migraciones los vean) ---
+    # --- Modelos (necesarios para que las migraciones los vean) ---
     from app.models import usuario  # noqa: F401
-    from app.facturas import models as facturas_models  # noqa: F401
 
     # --- Blueprints ---
+    # Dashboard / menú principal (compartido)
+    from app.main import bp as main_bp
+    app.register_blueprint(main_bp)
+
     # Persona A - Login / Autenticación
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix="/auth")
