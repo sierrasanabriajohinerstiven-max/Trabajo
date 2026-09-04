@@ -459,11 +459,98 @@ body.menu-abierto .sidebar-overlay {
   color: #991b1b;
 }
 
+/* --- Ventas (prefijo .venta-) ---
+   TODO: estas reglas duplican los componentes compartidos de más abajo
+   (.boton, .campo, .input, .encabezado...). Migrar las plantillas de
+   ventas a las clases genéricas y borrar este bloque. */
+.venta-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.venta-total {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-marca);
+}
+
+.venta-boton {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radio);
+  border: 1px solid var(--color-borde);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.venta-boton-primario {
+  background: var(--color-marca);
+  border-color: var(--color-marca);
+  color: #fff;
+}
+
+.venta-boton-plano {
+  background: transparent;
+  border-color: transparent;
+}
+
+.venta-boton-peligro {
+  background: #fff;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.venta-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.venta-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1 1 220px;
+}
+
+.venta-campo-corto {
+  flex: 0 1 120px;
+}
+
+.venta-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  font: inherit;
+}
+
+.venta-error {
+  color: #b91c1c;
+}
+
+.venta-acciones {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.venta-migas {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* --- Módulo proveedores (prefijo .prov-) ---
 /* --- Componentes compartidos + módulo proveedores ---
-   Los estilos los introdujo el módulo de proveedores; cada regla
-   lleva además un nombre genérico (sin el prefijo .prov-) para que
-   inventario, ventas y facturas reutilicen el MISMO diseño sin
-   duplicar CSS. Las plantillas de proveedores siguen funcionando. */
+   Los estilos los introdujo el módulo de proveedores; cada regla lleva
+   ademas un nombre generico (sin el prefijo .prov-) para que inventario,
+   ventas y facturas reutilicen el MISMO diseño sin duplicar CSS. */
    Reutiliza .panel, .tabla, .vacio y .seccion-titulo del sistema general;
    aquí solo van las piezas propias del módulo. */
 .encabezado,

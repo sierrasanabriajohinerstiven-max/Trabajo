@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Venta #{{ venta.id }}{% endblock %}
+{% block content %}
+  <p class="venta-migas"><a href="{{ url_for('ventas.index') }}">&larr; Volver a ventas</a></p>
+
+  <div class="venta-encabezado">
+    <div>
+      <h1 class="seccion-titulo">
+        <svg class="icono"><use href="#i-ventas"></use></svg> Venta #{{ venta.id }}
+      </h1>
+      <p class="subtitulo">
+        {{ venta.fecha.strftime("%d/%m/%Y %H:%M") }} ·
+        {{ venta.cliente or 'Mostrador' }} ·
+        Vendedor: {{ venta.usuario.nombre if venta.usuario else '—' }}
+      </p>
+    </div>
+    <div class="venta-total">$ {{ "{:,.2f}".format(venta.total) }}</div>
+  </div>
+
+  <section class="panel">
+    <h2 class="panel-titulo">Productos de la venta</h2>
+    {% if venta.detalles %}
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="numero">Cantidad</th>
+            <th class="numero">Precio unitario</th>
+            <th class="numero">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for linea in venta.detalles %}
+            <tr>
+              <td>{{ linea.producto.nombre if linea.producto else 'Producto eliminado' }}</td>
+              <td class="numero">{{ linea.cantidad }}</td>
+              <td class="numero">$ {{ "{:,.2f}".format(linea.precio_unitario) }}</td>
+              <td class="numero">$ {{ "{:,.2f}".format(linea.subtotal) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="vacio">Todavía no se ha agregado ningún producto a esta venta.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-titulo">Agregar producto</h2>
+    <form class="venta-formulario venta-formulario-linea" method="post"
+          action="{{ url_for('ventas.agregar_linea', venta_id=venta.id) }}">
+      {{ form.hidden_tag() }}
+      <div class="venta-campo">
+        {{ form.producto_id.label() }}
+        {{ form.producto_id(class="venta-input") }}
+      </div>
+      <div class="venta-campo venta-campo-corto">
+        {{ form.cantidad.label() }}
+        {{ form.cantidad(class="venta-input") }}
+      </div>
+      {{ form.submit(class="venta-boton venta-boton-primario") }}
+    </form>
+  </section>
+
+  <form method="post" action="{{ url_for('ventas.eliminar', venta_id=venta.id) }}"
+        onsubmit="return confirm('¿Eliminar la venta #{{ venta.id }}? Se repondrá el stock de sus productos.');">
+    {{ form_eliminar.hidden_tag() }}
+    <button type="submit" class="venta-boton venta-boton-peligro">Eliminar venta</button>
+  </form>
+{% endblock %}
