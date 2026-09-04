@@ -2,16 +2,38 @@
 
 Responsable: Persona A
 """
-from flask import render_template
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+from werkzeug.security import check_password_hash
+from urllib.parse import urlsplit
 
 from app.auth import bp
+from app.auth.forms import LoginForm
+from app.models.usuario import Usuario
 
-# TODO (Persona A):
-# - GET/POST /auth/login  -> valida credenciales, flask_login.login_user()
-# - GET      /auth/logout -> flask_login.logout_user() (usar @login_required)
-# - Los usuarios se crean por un admin/seed, NO hay registro público.
-
-
-@bp.route("/login")
+@bp.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("auth/login.html")
+    if current_user.is_authenticated:
+        return redirect(url_for("facturas.index"))
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        usuario = Usuario.query.filter_by(email=form.email.data.lower().strip()).first()
+        if usuario and usuario.activo and check_password_hash(
+            usuario.password_hash, form.password.data
+        ):
+            login_user(usuario)
+            siguiente = request.args.get("next")
+            if not siguiente or urlsplit(siguiente).netloc or not siguiente.startswith("/"):
+                siguiente = url_for("facturas.index")
+            return redirect(siguiente)
+        flash("Correo o contraseña incorrectos.", "error")
+    return render_template("auth/login.html", form=form)
+
+
+@bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Sesión cerrada correctamente.", "success")
+    return redirect(url_for("auth.login"))

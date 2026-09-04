@@ -1,6 +1,22 @@
 {% extends "base.html" %}
-{% block title %}facturas{% endblock %}
+{% block title %}Facturas{% endblock %}
 {% block content %}
-  <h1>facturas (en construcción)</h1>
-  <!-- TODO (Persona A): tabla/listado de Factura -->
+  <h1>Facturas</h1>
+  {% if facturas %}
+    <table>
+      <thead><tr><th>Número</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th></th></tr></thead>
+      <tbody>
+        {% for factura in facturas %}
+          <tr>
+            <td>{{ factura.numero }}</td><td>{{ factura.cliente }}</td>
+            <td>{{ factura.fecha.strftime('%d/%m/%Y') }}</td>
+            <td>{{ '%.2f'|format(factura.total) }}</td><td>{{ factura.estado }}</td>
+            <td><a href="{{ url_for('facturas.imprimir', factura_id=factura.id) }}">Imprimir / PDF</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay facturas registradas.</p>
+  {% endif %}
 {% endblock %}
