@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+
+{% macro campo(elemento, ancho='completo') %}
+  <div class="campo campo-{{ ancho }}">
+    {{ elemento.label() }}
+    {{ elemento(class='input' ~ (' input-error' if elemento.errors else '')) }}
+    {% for error in elemento.errors %}
+      <small class="error">{{ error }}</small>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+  <h1 class="seccion-titulo">
+    <svg class="icono icono--inventario"><use href="#i-inventario"></use></svg> {{ titulo }}
+  </h1>
+  <p class="subtitulo">Los campos Nombre, Precio y Unidades son obligatorios.</p>
+
+  <form class="formulario" method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <fieldset>
+      <legend>Identificación</legend>
+      {{ campo(form.nombre) }}
+      {{ campo(form.sku, 'medio') }}
+      {{ campo(form.descripcion) }}
+    </fieldset>
+
+    <fieldset>
+      <legend>Precio y existencias</legend>
+      {{ campo(form.precio, 'medio') }}
+      {{ campo(form.stock, 'medio') }}
+    </fieldset>
+
+    <fieldset>
+      <legend>Abastecimiento</legend>
+      {{ campo(form.proveedor_id, 'medio') }}
+      <div class="campo campo-check">
+        {{ form.activo() }} {{ form.activo.label() }}
+      </div>
+    </fieldset>
+
+    <div class="acciones">
+      {{ form.submit(class='boton boton-primario') }}
+      <a class="boton boton-plano" href="{{ url_for('inventario.index') }}">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}

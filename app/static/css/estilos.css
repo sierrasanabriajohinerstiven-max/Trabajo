@@ -16,6 +16,7 @@
   --radio: 0.625rem;
   --sombra: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.06);
   --ancho-sidebar: 236px;
+  --ancho-sidebar-min: 64px;   /* menú colapsado: solo iconos */
   --alto-topbar: 56px;
 }
 
@@ -65,22 +66,30 @@ h1 {
   border-bottom: 1px solid var(--color-borde);
 }
 
+/* Botón de menú: vive DENTRO del menú lateral, arriba de los apartados. */
 .menu-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 1px solid var(--color-borde);
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid transparent;
   border-radius: 0.5rem;
-  background: var(--color-superficie);
-  color: var(--color-texto);
-  font-size: 1.1rem;
+  background: transparent;
+  color: #d1d5db;
   cursor: pointer;
 }
 
 .menu-toggle:hover {
-  background: var(--color-fondo);
+  background: var(--color-sidebar-hover);
+  color: #ffffff;
+}
+
+.menu-toggle .icono {
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 .topbar-marca {
@@ -161,26 +170,39 @@ h1 {
   color: #ffffff;
 }
 
-/* --- Menú lateral --- */
+/* --- Menú lateral ---
+   Siempre visible: colapsado queda como riel de iconos (así el botón de
+   menú, que va dentro, nunca se pierde de vista); abierto muestra los
+   nombres de cada apartado. */
 .sidebar {
   position: fixed;
   top: var(--alto-topbar);
   left: 0;
   bottom: 0;
-  width: var(--ancho-sidebar);
+  width: var(--ancho-sidebar-min);
   z-index: 30;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
   padding: 1rem 0.75rem;
   background: var(--color-sidebar);
-  transform: translateX(-100%);
-  transition: transform 0.2s ease;
+  transition: width 0.2s ease;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
 body.menu-abierto .sidebar {
-  transform: translateX(0);
+  width: var(--ancho-sidebar);
+}
+
+/* El texto de cada apartado solo aparece con el menú abierto */
+.sidebar-texto {
+  display: none;
+  white-space: nowrap;
+}
+
+body.menu-abierto .sidebar-texto {
+  display: inline;
 }
 
 .sidebar a {
@@ -193,6 +215,18 @@ body.menu-abierto .sidebar {
   font-size: 0.925rem;
   font-weight: 500;
   text-decoration: none;
+}
+
+/* Colapsado: los iconos van centrados en el riel */
+body:not(.menu-abierto) .sidebar a,
+body:not(.menu-abierto) .menu-toggle {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body:not(.menu-abierto) .menu-toggle {
+  width: 100%;
 }
 
 .sidebar a:hover {
@@ -226,6 +260,7 @@ body.menu-abierto .sidebar-overlay {
 /* --- Contenido --- */
 .contenido {
   padding: calc(var(--alto-topbar) + 1.75rem) 1.5rem 2rem;
+  margin-left: var(--ancho-sidebar-min);
   transition: margin-left 0.2s ease;
   max-width: 1100px;
 }
@@ -424,7 +459,10 @@ body.menu-abierto .sidebar-overlay {
   color: #991b1b;
 }
 
-/* --- Ventas (prefijo .venta-) --- */
+/* --- Ventas (prefijo .venta-) ---
+   TODO: estas reglas duplican los componentes compartidos de más abajo
+   (.boton, .campo, .input, .encabezado...). Migrar las plantillas de
+   ventas a las clases genéricas y borrar este bloque. */
 .venta-encabezado {
   display: flex;
   align-items: flex-start;
@@ -508,9 +546,13 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.9rem;
 }
 
-/* --- Módulo proveedores (prefijo .prov-) ---
-   Reutiliza .panel, .tabla, .vacio y .seccion-titulo del sistema general;
-   aquí solo van las piezas propias del módulo. */
+/* --- Componentes compartidos + módulo proveedores ---
+   Estas reglas las introdujo el módulo de proveedores. Cada una lleva
+   además un nombre genérico (el mismo selector sin el prefijo .prov-)
+   para que inventario, ventas y facturas reutilicen el MISMO diseño sin
+   duplicar CSS. Las plantillas de proveedores siguen funcionando igual.
+   Reutiliza .panel, .tabla, .vacio y .seccion-titulo del sistema general. */
+.encabezado,
 .prov-encabezado {
   display: flex;
   flex-wrap: wrap;
@@ -520,14 +562,17 @@ body.menu-abierto .sidebar-overlay {
   margin-bottom: 1.5rem;
 }
 
+.encabezado h1,
 .prov-encabezado h1 {
   margin: 0 0 0.25rem;
 }
 
+.encabezado .subtitulo,
 .prov-encabezado .subtitulo {
   margin: 0;
 }
 
+.filtros,
 .prov-filtros {
   display: flex;
   flex-wrap: wrap;
@@ -535,13 +580,17 @@ body.menu-abierto .sidebar-overlay {
   margin-bottom: 1.5rem;
 }
 
+.filtros input[type="search"],
 .prov-filtros input[type="search"] {
   flex: 1 1 260px;
   min-width: 0;
 }
 
+.filtros input,
 .prov-filtros input,
+.filtros select,
 .prov-filtros select,
+.input,
 .prov-input {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-borde);
@@ -551,23 +600,29 @@ body.menu-abierto .sidebar-overlay {
   color: var(--color-texto);
 }
 
+.filtros input:focus,
 .prov-filtros input:focus,
+.filtros select:focus,
 .prov-filtros select:focus,
+.input:focus,
 .prov-input:focus {
   outline: 2px solid var(--color-marca);
   outline-offset: -1px;
   border-color: var(--color-marca);
 }
 
+.input,
 .prov-input {
   width: 100%;
   box-sizing: border-box;
 }
 
+.input-error,
 .prov-input-error {
   border-color: #dc2626;
 }
 
+.boton,
 .prov-boton {
   display: inline-flex;
   align-items: center;
@@ -583,81 +638,100 @@ body.menu-abierto .sidebar-overlay {
   cursor: pointer;
 }
 
+.boton:hover,
 .prov-boton:hover {
   background: var(--color-fondo);
 }
 
+.boton .icono,
 .prov-boton .icono {
   width: 1.05rem;
   height: 1.05rem;
 }
 
+.boton-primario,
 .prov-boton-primario {
   background: var(--color-marca);
   border-color: var(--color-marca);
   color: #fff;
 }
 
+.boton-primario:hover,
 .prov-boton-primario:hover {
   background: #1d4ed8;
 }
 
+.boton-plano,
 .prov-boton-plano {
   background: transparent;
   border-color: transparent;
   color: var(--color-texto-suave);
 }
 
+.boton-peligro,
 .prov-boton-peligro {
   background: var(--color-superficie);
   border-color: #fecaca;
   color: #b91c1c;
 }
 
+.boton-peligro:hover,
 .prov-boton-peligro:hover {
   background: #fef2f2;
 }
 
 /* La tabla tiene muchas columnas: se desplaza dentro del panel en vez de
    desbordar la página. */
+.tabla-scroll,
 .prov-tabla-scroll {
   overflow-x: auto;
 }
 
+.tabla-scroll .tabla,
 .prov-tabla-scroll .tabla {
   min-width: 780px;
 }
 
 /* Con 7 columnas el padding por defecto de .tabla no cabe en el ancho útil. */
+.tabla-scroll .tabla th,
 .prov-tabla-scroll .tabla th,
+.tabla-scroll .tabla td,
 .prov-tabla-scroll .tabla td {
   padding-left: 0.7rem;
   padding-right: 0.7rem;
 }
 
+.tabla-scroll .tabla th:first-child,
 .prov-tabla-scroll .tabla th:first-child,
+.tabla-scroll .tabla td:first-child,
 .prov-tabla-scroll .tabla td:first-child {
   padding-left: 1.25rem;
 }
 
+.tabla-scroll .tabla th:last-child,
 .prov-tabla-scroll .tabla th:last-child,
+.tabla-scroll .tabla td:last-child,
 .prov-tabla-scroll .tabla td:last-child {
   padding-right: 1.25rem;
 }
 
+.col-nombre,
 .prov-col-nombre {
   white-space: nowrap;
 }
 
+.acciones-fila,
 .prov-acciones-fila {
   white-space: nowrap;
   text-align: right;
 }
 
+.acciones-fila form,
 .prov-acciones-fila form {
   display: inline;
 }
 
+.enlace-peligro,
 .prov-enlace-peligro {
   border: 0;
   background: none;
@@ -668,6 +742,7 @@ body.menu-abierto .sidebar-overlay {
   text-decoration: underline;
 }
 
+.estado,
 .prov-estado {
   display: inline-block;
   padding: 0.15rem 0.55rem;
@@ -676,20 +751,24 @@ body.menu-abierto .sidebar-overlay {
   font-weight: 600;
 }
 
+.estado-activo,
 .prov-estado-activo {
   background: #ecfdf5;
   color: #065f46;
 }
 
+.estado-inactivo,
 .prov-estado-inactivo {
   background: var(--color-fondo);
   color: var(--color-texto-suave);
 }
 
+.formulario,
 .prov-formulario {
   max-width: 660px;
 }
 
+.formulario fieldset,
 .prov-formulario fieldset {
   border: 1px solid var(--color-borde);
   border-radius: var(--radio);
@@ -698,6 +777,7 @@ body.menu-abierto .sidebar-overlay {
   margin: 0 0 1.25rem;
 }
 
+.formulario legend,
 .prov-formulario legend {
   padding: 0 0.4rem;
   font-weight: 600;
@@ -707,10 +787,12 @@ body.menu-abierto .sidebar-overlay {
   letter-spacing: 0.04em;
 }
 
+.campo,
 .prov-campo {
   margin-bottom: 0.875rem;
 }
 
+.campo label,
 .prov-campo label {
   display: block;
   margin-bottom: 0.3rem;
@@ -718,19 +800,23 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.9rem;
 }
 
+.campo-medio .input,
 .prov-campo-medio .prov-input {
   max-width: 320px;
 }
 
+.campo-check label,
 .prov-campo-check label {
   display: inline;
 }
 
+.campo textarea.input,
 .prov-campo textarea.prov-input {
   min-height: 5rem;
   resize: vertical;
 }
 
+.error,
 .prov-error {
   display: block;
   margin-top: 0.3rem;
@@ -738,6 +824,7 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.85rem;
 }
 
+.acciones,
 .prov-acciones {
   display: flex;
   flex-wrap: wrap;
@@ -745,6 +832,7 @@ body.menu-abierto .sidebar-overlay {
   align-items: center;
 }
 
+.ficha,
 .prov-ficha {
   display: grid;
   grid-template-columns: minmax(160px, 220px) 1fr;
@@ -753,25 +841,100 @@ body.menu-abierto .sidebar-overlay {
   padding: 1.25rem;
 }
 
+.ficha dt,
 .prov-ficha dt {
   font-weight: 600;
   color: var(--color-texto-suave);
 }
 
+.ficha dd,
 .prov-ficha dd {
   margin: 0;
 }
 
+.notas,
 .prov-notas {
   white-space: pre-wrap;
 }
 
 @media (max-width: 560px) {
+  .ficha,
   .prov-ficha {
     grid-template-columns: 1fr;
   }
 
+  .ficha dd,
   .prov-ficha dd {
     margin-bottom: 0.5rem;
   }
 }
+
+/* --- Menú colapsado: el perfil se reduce para caber en el riel --- */
+body:not(.menu-abierto) .sidebar-perfil-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+body:not(.menu-abierto) .sidebar-perfil-avatar .icono {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* --- Inventario (prefijo .inv-) --- */
+.inv-stock {
+  display: inline-block;
+  min-width: 2.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.inv-stock-bajo {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.inv-stock-ok {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.inv-sin-dato {
+  color: var(--color-texto-suave);
+}
+
+/* --- Color de los iconos por sección ---
+   Va al final a propósito: así gana sobre los colores por defecto de
+   tarjetas, paneles y títulos (misma especificidad, declarado después). */
+.icono.icono--dashboard { color: #2563eb; }
+.icono.icono--facturas { color: #7c3aed; }
+.icono.icono--inventario { color: #d97706; }
+.icono.icono--ventas { color: #059669; }
+.icono.icono--proveedores { color: #0891b2; }
+.icono.icono--salir { color: #dc2626; }
+.icono.icono--alerta { color: #dc2626; }
+.icono.icono--estrella { color: #d97706; }
+.icono.icono--reloj { color: #0891b2; }
+.icono.icono--editar { color: #2563eb; }
+.icono.icono--eliminar { color: #dc2626; }
+
+/* En el menú oscuro se usan tonos más claros para que contrasten */
+.sidebar .icono.icono--dashboard { color: #60a5fa; }
+.sidebar .icono.icono--facturas { color: #a78bfa; }
+.sidebar .icono.icono--inventario { color: #fbbf24; }
+.sidebar .icono.icono--ventas { color: #34d399; }
+.sidebar .icono.icono--proveedores { color: #22d3ee; }
+.sidebar .icono.icono--salir { color: #f87171; }
+
+/* La sección activa tiene fondo azul: sus iconos van en blanco */
+.sidebar a.activo .icono.icono--dashboard,
+.sidebar a.activo .icono.icono--facturas,
+.sidebar a.activo .icono.icono--inventario,
+.sidebar a.activo .icono.icono--ventas,
+.sidebar a.activo .icono.icono--proveedores { color: #ffffff; }
+
+/* Botón primario: su icono va en blanco como el texto */
+.boton-primario .icono,
+.prov-boton-primario .icono { color: #ffffff; }

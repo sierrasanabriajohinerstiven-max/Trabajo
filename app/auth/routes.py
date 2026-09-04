@@ -33,5 +33,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash("Sesión cerrada correctamente.", "info")
-    return redirect(url_for("auth.login"))
+    flash("Sesión cerrada correctamente.", "exito")
+    # TODO (Persona A): cuando exista el login real, redirigir a auth.login.
+    return redirect(url_for("main.dashboard"))

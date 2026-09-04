@@ -10,12 +10,10 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.extensions import db
 from app.facturas.models import Factura
-from app.inventario.models import Producto
+from app.inventario.models import STOCK_BAJO, Producto
 from app.proveedores.models import Proveedor
 from app.utils import ahora_utc
 from app.ventas.models import DetalleVenta, Venta
-
-STOCK_BAJO = 5  # unidades o menos se consideran stock bajo
 
 
 def _inicio_del_mes() -> datetime:

@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
   <h1 class="seccion-titulo">
-    <svg class="icono"><use href="#i-tablero"></use></svg> Dashboard
+    <svg class="icono icono--dashboard"><use href="#i-tablero"></use></svg> Dashboard
   </h1>
   <p class="subtitulo">Resumen general del D1.</p>
 
@@ -10,7 +10,7 @@
   <div class="resumen-grid">
     <div class="tarjeta">
       <div class="tarjeta-encabezado">
-        <svg class="icono"><use href="#i-tendencia"></use></svg> Ventas de este mes
+        <svg class="icono icono--ventas"><use href="#i-tendencia"></use></svg> Ventas de este mes
       </div>
       <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.ventas_mes.total) }}</div>
       <div class="tarjeta-detalle">
@@ -21,7 +21,7 @@
 
     <div class="tarjeta">
       <div class="tarjeta-encabezado">
-        <svg class="icono"><use href="#i-reloj"></use></svg> Ventas de hoy
+        <svg class="icono icono--reloj"><use href="#i-reloj"></use></svg> Ventas de hoy
       </div>
       <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.ventas_hoy.total) }}</div>
       <div class="tarjeta-detalle">
@@ -32,7 +32,7 @@
 
     <div class="tarjeta">
       <div class="tarjeta-encabezado">
-        <svg class="icono"><use href="#i-etiqueta"></use></svg> Valor del inventario
+        <svg class="icono icono--inventario"><use href="#i-etiqueta"></use></svg> Valor del inventario
       </div>
       <div class="tarjeta-valor">$ {{ "{:,.2f}".format(resumen.inventario.valor) }}</div>
       <div class="tarjeta-detalle">
@@ -42,7 +42,7 @@
 
     <div class="tarjeta">
       <div class="tarjeta-encabezado">
-        <svg class="icono"><use href="#i-facturas"></use></svg> Facturas del mes
+        <svg class="icono icono--facturas"><use href="#i-facturas"></use></svg> Facturas del mes
       </div>
       <div class="tarjeta-valor">{{ resumen.facturas_mes }}</div>
       <div class="tarjeta-detalle">{{ resumen.proveedores }} proveedores activos</div>
@@ -52,7 +52,7 @@
   {# --- Productos más vendidos --- #}
   <section class="panel">
     <h2 class="panel-titulo">
-      <svg class="icono"><use href="#i-estrella"></use></svg> Productos más vendidos del mes
+      <svg class="icono icono--estrella"><use href="#i-estrella"></use></svg> Productos más vendidos del mes
     </h2>
 
     {% if resumen.mas_vendidos %}
@@ -82,7 +82,7 @@
   {# --- Stock bajo --- #}
   <section class="panel">
     <h2 class="panel-titulo">
-      <svg class="icono"><use href="#i-alerta"></use></svg> Productos por reponer
+      <svg class="icono icono--alerta"><use href="#i-alerta"></use></svg> Productos por reponer
     </h2>
 
     {% if resumen.stock_bajo %}
@@ -108,4 +108,15 @@
       <p class="vacio">Ningún producto está por agotarse.</p>
     {% endif %}
   </section>
+
+  {# --- Accesos rápidos --- #}
+  <h2 class="seccion-titulo" style="font-size: 1.1rem; margin-bottom: 0.75rem;">Accesos rápidos</h2>
+  <div class="dashboard-grid">
+    {% for texto, endpoint, icono in secciones %}
+      <a class="dashboard-card" href="{{ url_for(endpoint) }}">
+        <svg class="icono icono--{{ endpoint.split('.')[0] }}"><use href="#{{ icono }}"></use></svg>
+        <span class="dashboard-card-texto">{{ texto }}</span>
+      </a>
+    {% endfor %}
+  </div>
 {% endblock %}

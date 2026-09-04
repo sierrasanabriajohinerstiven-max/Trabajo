@@ -12,39 +12,44 @@
 
   {# --- Barra superior --- #}
   <header class="topbar">
+    <a class="topbar-marca" href="{{ url_for('main.dashboard') }}">
+      <img class="topbar-logo" src="{{ url_for('static', filename='img/logo-d1.svg') }}" alt="D1">
+    </a>
+    <span class="topbar-separador" aria-hidden="true"></span>
+    <span class="topbar-titulo">Panel de administrador</span>
+  </header>
+
+  {# --- Menú lateral: el botón va arriba de los apartados --- #}
+  <nav id="sidebar" class="sidebar" aria-label="Menú principal">
     <button id="menu-toggle" class="menu-toggle" type="button"
             aria-label="Abrir o cerrar menú" aria-expanded="false" aria-controls="sidebar">
       <svg class="icono"><use href="#i-menu"></use></svg>
     </button>
 
-    <a class="topbar-marca" href="{{ url_for('main.index') }}">
-      <img class="topbar-logo" src="{{ url_for('static', filename='img/logo-d1.svg') }}" alt="Logo D1">
-      <span class="topbar-nombre">D1</span>
+    <a href="{{ url_for('main.dashboard') }}" title="Dashboard"
+       class="{{ 'activo' if request.blueprint == 'main' }}">
+      <svg class="icono icono--dashboard"><use href="#i-tablero"></use></svg>
+      <span class="sidebar-texto">Dashboard</span>
     </a>
-
-    <span class="topbar-separador" aria-hidden="true"></span>
-    <span class="topbar-titulo">Panel de administrador</span>
-  </header>
-
-  {# --- Menú lateral --- #}
-  <nav id="sidebar" class="sidebar" aria-label="Menú principal">
-    <a href="{{ url_for('main.index') }}" class="{{ 'activo' if request.endpoint == 'main.index' }}">
-      <svg class="icono"><use href="#i-inicio"></use></svg> Inicio
+    <a href="{{ url_for('facturas.index') }}" title="Facturas"
+       class="{{ 'activo' if request.blueprint == 'facturas' }}">
+      <svg class="icono icono--facturas"><use href="#i-facturas"></use></svg>
+      <span class="sidebar-texto">Facturas</span>
     </a>
-    <a href="{{ url_for('main.dashboard') }}" class="{{ 'activo' if request.endpoint == 'main.dashboard' }}">
-      <svg class="icono"><use href="#i-tablero"></use></svg> Dashboard
+    <a href="{{ url_for('inventario.index') }}" title="Inventario"
+       class="{{ 'activo' if request.blueprint == 'inventario' }}">
+      <svg class="icono icono--inventario"><use href="#i-inventario"></use></svg>
+      <span class="sidebar-texto">Inventario</span>
     </a>
-    <a href="{{ url_for('facturas.index') }}" class="{{ 'activo' if request.blueprint == 'facturas' }}">
-      <svg class="icono"><use href="#i-facturas"></use></svg> Facturas
+    <a href="{{ url_for('ventas.index') }}" title="Ventas"
+       class="{{ 'activo' if request.blueprint == 'ventas' }}">
+      <svg class="icono icono--ventas"><use href="#i-ventas"></use></svg>
+      <span class="sidebar-texto">Ventas</span>
     </a>
-    <a href="{{ url_for('inventario.index') }}" class="{{ 'activo' if request.blueprint == 'inventario' }}">
-      <svg class="icono"><use href="#i-inventario"></use></svg> Inventario
-    </a>
-    <a href="{{ url_for('ventas.index') }}" class="{{ 'activo' if request.blueprint == 'ventas' }}">
-      <svg class="icono"><use href="#i-ventas"></use></svg> Ventas
-    </a>
-    <a href="{{ url_for('proveedores.index') }}" class="{{ 'activo' if request.blueprint == 'proveedores' }}">
-      <svg class="icono"><use href="#i-proveedores"></use></svg> Proveedores
+    <a href="{{ url_for('proveedores.index') }}" title="Proveedores"
+       class="{{ 'activo' if request.blueprint == 'proveedores' }}">
+      <svg class="icono icono--proveedores"><use href="#i-proveedores"></use></svg>
+      <span class="sidebar-texto">Proveedores</span>
     </a>
 
     {# --- Perfil, siempre al final del menú --- #}
@@ -52,11 +57,12 @@
       <span class="sidebar-perfil-avatar">
         <svg class="icono"><use href="#i-usuario"></use></svg>
       </span>
-      <span class="sidebar-perfil-nombre">
+      <span class="sidebar-perfil-nombre sidebar-texto">
         {{ current_user.nombre if current_user.is_authenticated else 'Administrador' }}
       </span>
-      <a class="sidebar-salir" href="{{ url_for('auth.logout') }}">
-        <svg class="icono"><use href="#i-salir"></use></svg> Cerrar sesión
+      <a class="sidebar-salir" href="{{ url_for('auth.logout') }}" title="Cerrar sesión">
+        <svg class="icono icono--salir"><use href="#i-salir"></use></svg>
+        <span class="sidebar-texto">Cerrar sesión</span>
       </a>
     </div>
   </nav>
