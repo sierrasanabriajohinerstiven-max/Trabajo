@@ -4,7 +4,6 @@ Responsable: Persona A
 """
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
-from werkzeug.security import check_password_hash
 from urllib.parse import urlsplit
 
 from app.auth import bp
@@ -19,9 +18,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         usuario = Usuario.query.filter_by(email=form.email.data.lower().strip()).first()
-        if usuario and usuario.activo and check_password_hash(
-            usuario.password_hash, form.password.data
-        ):
+        if usuario and usuario.activo and usuario.check_password(form.password.data):
             login_user(usuario)
             siguiente = request.args.get("next")
             if not siguiente or urlsplit(siguiente).netloc or not siguiente.startswith("/"):

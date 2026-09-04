@@ -21,6 +21,7 @@ def create_app(config_class: type = Config) -> Flask:
 
     # --- Modelos compartidos (necesarios para que las migraciones los vean) ---
     from app.models import usuario  # noqa: F401
+    from app.facturas import models as facturas_models  # noqa: F401
 
     # --- Blueprints ---
     # Persona A - Login / Autenticación
