@@ -4,13 +4,13 @@
   <h1>Facturas</h1>
   {% if facturas %}
     <table>
-      <thead><tr><th>Número</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th></th></tr></thead>
+      <thead><tr><th>Número</th><th>Cliente</th><th>Fecha</th><th>Total</th><th></th></tr></thead>
       <tbody>
         {% for factura in facturas %}
           <tr>
-            <td>{{ factura.numero }}</td><td>{{ factura.cliente }}</td>
+            <td>{{ factura.numero }}</td><td>{{ factura.venta.cliente if factura.venta else 'Sin cliente' }}</td>
             <td>{{ factura.fecha.strftime('%d/%m/%Y') }}</td>
-            <td>{{ '%.2f'|format(factura.total) }}</td><td>{{ factura.estado }}</td>
+            <td>{{ '%.2f'|format(factura.total) }}</td>
             <td><a href="{{ url_for('facturas.imprimir', factura_id=factura.id) }}">Imprimir / PDF</a></td>
           </tr>
         {% endfor %}
@@ -19,15 +19,4 @@
   {% else %}
     <p>No hay facturas registradas.</p>
   {% endif %}
-  <h1 class="seccion-titulo">
-    <svg class="icono"><use href="#i-facturas"></use></svg> Facturas
-  </h1>
-  <p class="subtitulo">Sección en construcción.</p>
-
-  <div class="panel">
-    <p class="vacio">
-      <!-- TODO (Persona A): tabla/listado de Factura -->
-      Aquí va el listado de facturas.
-    </p>
-  </div>
 {% endblock %}
