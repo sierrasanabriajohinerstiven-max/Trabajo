@@ -1,15 +1,49 @@
 {% extends "base.html" %}
 {% block title %}Ventas{% endblock %}
 {% block content %}
-  <h1 class="seccion-titulo">
-    <svg class="icono"><use href="#i-ventas"></use></svg> Ventas
-  </h1>
-  <p class="subtitulo">Sección en construcción.</p>
-
-  <div class="panel">
-    <p class="vacio">
-      <!-- TODO (Persona C): tabla/listado de Venta -->
-      Aquí va el listado de ventas.
-    </p>
+  <div class="venta-encabezado">
+    <div>
+      <h1 class="seccion-titulo">
+        <svg class="icono"><use href="#i-ventas"></use></svg> Ventas
+      </h1>
+      <p class="subtitulo">{{ ventas|length }} venta{{ '' if ventas|length == 1 else 's' }} registrada{{ '' if ventas|length == 1 else 's' }}.</p>
+    </div>
+    <a class="venta-boton venta-boton-primario" href="{{ url_for('ventas.nueva') }}">+ Iniciar venta</a>
   </div>
+
+  <section class="panel">
+    {% if ventas %}
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Vendedor</th>
+            <th class="numero">Líneas</th>
+            <th class="numero">Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for venta in ventas %}
+            <tr>
+              <td><a href="{{ url_for('ventas.detalle', venta_id=venta.id) }}">#{{ venta.id }}</a></td>
+              <td>{{ venta.fecha.strftime("%d/%m/%Y %H:%M") }}</td>
+              <td>{{ venta.cliente or 'Mostrador' }}</td>
+              <td>{{ venta.usuario.nombre if venta.usuario else '—' }}</td>
+              <td class="numero">{{ venta.detalles|length }}</td>
+              <td class="numero">$ {{ "{:,.2f}".format(venta.total) }}</td>
+              <td><a href="{{ url_for('ventas.detalle', venta_id=venta.id) }}">ver</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="vacio">
+        Todavía no hay ventas registradas.
+        <a href="{{ url_for('ventas.nueva') }}">Inicia la primera</a>.
+      </p>
+    {% endif %}
+  </section>
 {% endblock %}

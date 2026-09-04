@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Iniciar venta{% endblock %}
+{% block content %}
+  <h1 class="seccion-titulo">
+    <svg class="icono"><use href="#i-ventas"></use></svg> Iniciar venta
+  </h1>
+  <p class="subtitulo">Los productos se agregan en el siguiente paso.</p>
+
+  <section class="panel">
+    <form class="venta-formulario" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="venta-campo">
+        {{ form.cliente.label() }}
+        {{ form.cliente(class="venta-input", placeholder="Opcional — venta de mostrador si se deja vacío") }}
+        {% for error in form.cliente.errors %}<small class="venta-error">{{ error }}</small>{% endfor %}
+      </div>
+      <div class="venta-acciones">
+        {{ form.submit(class="venta-boton venta-boton-primario") }}
+        <a class="venta-boton venta-boton-plano" href="{{ url_for('ventas.index') }}">Cancelar</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}
