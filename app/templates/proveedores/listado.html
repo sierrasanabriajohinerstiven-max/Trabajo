@@ -1,6 +1,95 @@
 {% extends "base.html" %}
-{% block title %}proveedores{% endblock %}
+{% block title %}Proveedores{% endblock %}
 {% block content %}
-  <h1>proveedores (en construcción)</h1>
-  <!-- TODO (Persona B): tabla/listado de Proveedor -->
+  <div class="prov-encabezado">
+    <div>
+      <h1 class="seccion-titulo">
+        <svg class="icono"><use href="#i-proveedores"></use></svg> Proveedores
+      </h1>
+      <p class="subtitulo">
+        {{ total }} registrado{{ '' if total == 1 else 's' }} ·
+        {{ total_activos }} activo{{ '' if total_activos == 1 else 's' }}
+      </p>
+    </div>
+    <a class="prov-boton prov-boton-primario" href="{{ url_for('proveedores.nuevo') }}">
+      Nuevo proveedor
+    </a>
+  </div>
+
+  <form class="prov-filtros" method="get" action="{{ url_for('proveedores.index') }}">
+    <input
+      type="search"
+      name="q"
+      value="{{ termino }}"
+      aria-label="Buscar proveedores"
+      placeholder="Buscar por nombre, NIT, contacto o ciudad">
+    <select name="estado" aria-label="Filtrar por estado">
+      {% for valor, texto in estados %}
+        <option value="{{ valor }}" {{ 'selected' if valor == estado }}>{{ texto }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="prov-boton">Filtrar</button>
+    {% if termino or estado != 'todos' %}
+      <a class="prov-boton prov-boton-plano" href="{{ url_for('proveedores.index') }}">Limpiar</a>
+    {% endif %}
+  </form>
+
+  <div class="panel">
+    {% if proveedores %}
+      <div class="prov-tabla-scroll">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>NIT</th>
+            <th>Contacto</th>
+            <th>Ciudad</th>
+            <th class="numero">Productos</th>
+            <th>Estado</th>
+            <th class="prov-acciones-fila">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for proveedor in proveedores %}
+            <tr>
+              <td class="prov-col-nombre">
+                <a href="{{ url_for('proveedores.detalle', proveedor_id=proveedor.id) }}">
+                  {{ proveedor.nombre }}
+                </a>
+              </td>
+              <td>{{ proveedor.nit }}</td>
+              <td>{{ proveedor.contacto or '—' }}</td>
+              <td>{{ proveedor.ciudad or '—' }}</td>
+              <td class="numero">{{ proveedor.productos | length }}</td>
+              <td>
+                <span class="prov-estado prov-estado-{{ 'activo' if proveedor.activo else 'inactivo' }}">
+                  {{ proveedor.estado }}
+                </span>
+              </td>
+              <td class="prov-acciones-fila">
+                <a href="{{ url_for('proveedores.editar', proveedor_id=proveedor.id) }}">Editar</a>
+                <form
+                  method="post"
+                  action="{{ url_for('proveedores.eliminar', proveedor_id=proveedor.id) }}"
+                  onsubmit="return confirm('¿Eliminar a {{ proveedor.nombre }}? Esta acción no se puede deshacer.');">
+                  {{ form_eliminar.hidden_tag() }}
+                  <button type="submit" class="prov-enlace-peligro">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    {% else %}
+      <p class="vacio">
+        {% if termino or estado != 'todos' %}
+          Ningún proveedor coincide con la búsqueda.
+        {% else %}
+          Todavía no hay proveedores registrados.
+          <a href="{{ url_for('proveedores.nuevo') }}">Crea el primero</a>.
+        {% endif %}
+      </p>
+    {% endif %}
+  </div>
 {% endblock %}

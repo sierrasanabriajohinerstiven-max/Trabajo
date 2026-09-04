@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+  <h1 class="seccion-titulo">
+    <svg class="icono"><use href="#i-inicio"></use></svg> Panel de administrador
+  </h1>
+  <p class="subtitulo">Bienvenido al sistema de gestión D1. Elige una sección:</p>
+
+  <div class="dashboard-grid">
+    {% for texto, endpoint, icono in secciones %}
+      <a class="dashboard-card" href="{{ url_for(endpoint) }}">
+        <svg class="icono"><use href="#{{ icono }}"></use></svg>
+        <span class="dashboard-card-texto">{{ texto }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}

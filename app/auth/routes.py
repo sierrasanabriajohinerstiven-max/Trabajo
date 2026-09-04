@@ -15,6 +15,10 @@ from app.models.usuario import Usuario
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("facturas.index"))
+# TODO (Persona A):
+# - POST /auth/login -> validar credenciales con el formulario y
+#   flask_login.login_user(usuario, remember=...)
+# - Los usuarios se crean por un admin/seed, NO hay registro público.
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -30,10 +34,16 @@ def login():
         flash("Correo o contraseña incorrectos.", "error")
     return render_template("auth/login.html", form=form)
 
+@bp.route("/login")
+def login():
+    return render_template("auth/login.html")
+
 
 @bp.route("/logout")
-@login_required
 def logout():
+    """Cierra la sesión. Sin @login_required para que el enlace del menú
+    funcione siempre y no rebote cuando no hay sesión activa."""
     logout_user()
-    flash("Sesión cerrada correctamente.", "success")
-    return redirect(url_for("auth.login"))
+    flash("Sesión cerrada correctamente.", "info")
+    # TODO (Persona A): cuando exista el login real, redirigir a auth.login.
+    return redirect(url_for("main.index"))
