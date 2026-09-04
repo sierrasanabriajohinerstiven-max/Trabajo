@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+
+{% macro campo(elemento, ancho='completo') %}
+  <div class="prov-campo prov-campo-{{ ancho }}">
+    {{ elemento.label() }}
+    {{ elemento(class='prov-input' ~ (' prov-input-error' if elemento.errors else '')) }}
+    {% for error in elemento.errors %}
+      <small class="prov-error">{{ error }}</small>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+  <h1>{{ titulo }}</h1>
+
+  <form class="prov-formulario" method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <fieldset>
+      <legend>Identificación</legend>
+      {{ campo(form.nombre) }}
+      {{ campo(form.nit, 'medio') }}
+    </fieldset>
+
+    <fieldset>
+      <legend>Contacto</legend>
+      {{ campo(form.contacto, 'medio') }}
+      {{ campo(form.email, 'medio') }}
+      {{ campo(form.telefono, 'medio') }}
+    </fieldset>
+
+    <fieldset>
+      <legend>Ubicación</legend>
+      {{ campo(form.direccion) }}
+      {{ campo(form.ciudad, 'medio') }}
+    </fieldset>
+
+    <fieldset>
+      <legend>Otros datos</legend>
+      <div class="prov-campo prov-campo-check">
+        {{ form.activo() }} {{ form.activo.label() }}
+      </div>
+      {{ campo(form.notas) }}
+    </fieldset>
+
+    <div class="prov-acciones">
+      {{ form.submit(class='prov-boton prov-boton-primario') }}
+      <a class="prov-boton prov-boton-plano"
+         href="{{ url_for('proveedores.detalle', proveedor_id=proveedor.id) if proveedor else url_for('proveedores.index') }}">
+        Cancelar
+      </a>
+    </div>
+  </form>
+{% endblock %}

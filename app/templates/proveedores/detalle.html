@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ proveedor.nombre }}{% endblock %}
+{% block content %}
+  <p class="prov-migas"><a href="{{ url_for('proveedores.index') }}">← Volver a proveedores</a></p>
+
+  <div class="prov-encabezado">
+    <div>
+      <h1>{{ proveedor.nombre }}</h1>
+      <span class="prov-estado prov-estado-{{ 'activo' if proveedor.activo else 'inactivo' }}">
+        {{ proveedor.estado }}
+      </span>
+    </div>
+    <a class="prov-boton prov-boton-primario"
+       href="{{ url_for('proveedores.editar', proveedor_id=proveedor.id) }}">Editar</a>
+  </div>
+
+  <dl class="prov-ficha">
+    <dt>NIT</dt><dd>{{ proveedor.nit }}</dd>
+    <dt>Persona de contacto</dt><dd>{{ proveedor.contacto or '—' }}</dd>
+    <dt>Correo</dt>
+    <dd>
+      {% if proveedor.email %}
+        <a href="mailto:{{ proveedor.email }}">{{ proveedor.email }}</a>
+      {% else %}—{% endif %}
+    </dd>
+    <dt>Teléfono</dt><dd>{{ proveedor.telefono or '—' }}</dd>
+    <dt>Dirección</dt><dd>{{ proveedor.direccion or '—' }}</dd>
+    <dt>Ciudad</dt><dd>{{ proveedor.ciudad or '—' }}</dd>
+    <dt>Notas</dt><dd class="prov-notas">{{ proveedor.notas or '—' }}</dd>
+    <dt>Registrado</dt><dd>{{ proveedor.creado_en.strftime('%d/%m/%Y %H:%M') }}</dd>
+    <dt>Última actualización</dt><dd>{{ proveedor.actualizado_en.strftime('%d/%m/%Y %H:%M') }}</dd>
+  </dl>
+
+  {# TODO (Persona B): listar aquí los productos de inventario que abastece
+     este proveedor, cuando Producto tenga el campo proveedor_id. #}
+
+  <div class="prov-acciones">
+    <form method="post" action="{{ url_for('proveedores.cambiar_estado', proveedor_id=proveedor.id) }}">
+      {{ form_eliminar.hidden_tag() }}
+      <button type="submit" class="prov-boton">
+        {{ 'Desactivar' if proveedor.activo else 'Activar' }}
+      </button>
+    </form>
+
+    <form
+      method="post"
+      action="{{ url_for('proveedores.eliminar', proveedor_id=proveedor.id) }}"
+      onsubmit="return confirm('¿Eliminar a {{ proveedor.nombre }}? Esta acción no se puede deshacer.');">
+      {{ form_eliminar.hidden_tag() }}
+      <button type="submit" class="prov-boton prov-boton-peligro">Eliminar</button>
+    </form>
+  </div>
+{% endblock %}

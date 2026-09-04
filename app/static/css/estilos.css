@@ -62,3 +62,276 @@ main {
 .dashboard-card-texto {
   font-weight: 600;
 }
+
+/* --- Mensajes flash (compartido) --- */
+.flash {
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+}
+
+.flash-exito {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.flash-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+/* --- Módulo proveedores (prefijo .prov-) --- */
+.prov-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prov-encabezado h1 {
+  margin: 0 0 0.25rem;
+}
+
+.prov-resumen,
+.prov-migas {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.prov-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.25rem 0;
+}
+
+.prov-filtros input[type="search"] {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.prov-filtros input,
+.prov-filtros select,
+.prov-input {
+  padding: 0.5rem 0.625rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font: inherit;
+  background: #fff;
+  color: #1f2937;
+}
+
+.prov-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.prov-input-error {
+  border-color: #dc2626;
+}
+
+.prov-boton {
+  display: inline-block;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: #f9fafb;
+  color: #1f2937;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.prov-boton:hover {
+  background: #f3f4f6;
+}
+
+.prov-boton-primario {
+  background: #1f2937;
+  border-color: #1f2937;
+  color: #f9fafb;
+}
+
+.prov-boton-primario:hover {
+  background: #111827;
+}
+
+.prov-boton-plano {
+  background: transparent;
+  border-color: transparent;
+  color: #4b5563;
+}
+
+.prov-boton-peligro {
+  background: #fff;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.prov-boton-peligro:hover {
+  background: #fef2f2;
+}
+
+.prov-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.prov-tabla th,
+.prov-tabla td {
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.prov-tabla th {
+  background: #f9fafb;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #6b7280;
+}
+
+.prov-tabla tbody tr:hover {
+  background: #f9fafb;
+}
+
+.prov-col-acciones {
+  white-space: nowrap;
+}
+
+.prov-col-acciones form {
+  display: inline;
+}
+
+.prov-enlace-peligro {
+  border: 0;
+  background: none;
+  padding: 0 0 0 0.5rem;
+  font: inherit;
+  color: #b91c1c;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.prov-estado {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.prov-estado-activo {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.prov-estado-inactivo {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.prov-vacio {
+  margin-top: 2rem;
+  color: #6b7280;
+}
+
+.prov-formulario {
+  max-width: 640px;
+  margin-top: 1rem;
+}
+
+.prov-formulario fieldset {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+  margin: 0 0 1.25rem;
+}
+
+.prov-formulario legend {
+  padding: 0 0.375rem;
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.prov-campo {
+  margin-bottom: 0.875rem;
+}
+
+.prov-campo label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.prov-campo-medio .prov-input {
+  max-width: 320px;
+}
+
+.prov-campo-check label {
+  display: inline;
+  font-weight: 600;
+}
+
+.prov-campo textarea.prov-input {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.prov-error {
+  display: block;
+  margin-top: 0.25rem;
+  color: #b91c1c;
+}
+
+.prov-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.prov-ficha {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 0.5rem 1rem;
+  max-width: 720px;
+  margin-top: 1.5rem;
+}
+
+.prov-ficha dt {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.prov-ficha dd {
+  margin: 0;
+}
+
+.prov-notas {
+  white-space: pre-wrap;
+}
+
+@media (max-width: 560px) {
+  .prov-ficha {
+    grid-template-columns: 1fr;
+  }
+
+  .prov-ficha dd {
+    margin-bottom: 0.5rem;
+  }
+}
