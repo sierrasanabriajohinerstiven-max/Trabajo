@@ -1,0 +1,7 @@
+/* Estilos globales. Cada módulo puede agregar sus propias clases aquí,
+   evitando pisar las reglas de los demás (usar prefijos, ej. .factura-*). */
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+}
