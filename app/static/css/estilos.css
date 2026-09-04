@@ -66,29 +66,30 @@ h1 {
   border-bottom: 1px solid var(--color-borde);
 }
 
-/* Botón de menú: va dentro del contenido, debajo de la barra superior */
+/* Botón de menú: vive DENTRO del menú lateral, arriba de los apartados. */
 .menu-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.4rem;
-  height: 2.4rem;
-  margin-bottom: 1.25rem;
-  border: 1px solid var(--color-borde);
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid transparent;
   border-radius: 0.5rem;
-  background: var(--color-superficie);
-  color: var(--color-texto);
-  box-shadow: var(--sombra);
+  background: transparent;
+  color: #d1d5db;
   cursor: pointer;
 }
 
 .menu-toggle:hover {
-  background: var(--color-fondo);
+  background: var(--color-sidebar-hover);
+  color: #ffffff;
 }
 
 .menu-toggle .icono {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 .topbar-marca {
@@ -169,26 +170,39 @@ h1 {
   color: #ffffff;
 }
 
-/* --- Menú lateral --- */
+/* --- Menú lateral ---
+   Siempre visible: colapsado queda como riel de iconos (así el botón de
+   menú, que va dentro, nunca se pierde de vista); abierto muestra los
+   nombres de cada apartado. */
 .sidebar {
   position: fixed;
   top: var(--alto-topbar);
   left: 0;
   bottom: 0;
-  width: var(--ancho-sidebar);
+  width: var(--ancho-sidebar-min);
   z-index: 30;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
   padding: 1rem 0.75rem;
   background: var(--color-sidebar);
-  transform: translateX(-100%);
-  transition: transform 0.2s ease;
+  transition: width 0.2s ease;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
 body.menu-abierto .sidebar {
-  transform: translateX(0);
+  width: var(--ancho-sidebar);
+}
+
+/* El texto de cada apartado solo aparece con el menú abierto */
+.sidebar-texto {
+  display: none;
+  white-space: nowrap;
+}
+
+body.menu-abierto .sidebar-texto {
+  display: inline;
 }
 
 .sidebar a {
@@ -201,6 +215,18 @@ body.menu-abierto .sidebar {
   font-size: 0.925rem;
   font-weight: 500;
   text-decoration: none;
+}
+
+/* Colapsado: los iconos van centrados en el riel */
+body:not(.menu-abierto) .sidebar a,
+body:not(.menu-abierto) .menu-toggle {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body:not(.menu-abierto) .menu-toggle {
+  width: 100%;
 }
 
 .sidebar a:hover {
@@ -234,6 +260,7 @@ body.menu-abierto .sidebar-overlay {
 /* --- Contenido --- */
 .contenido {
   padding: calc(var(--alto-topbar) + 1.75rem) 1.5rem 2rem;
+  margin-left: var(--ancho-sidebar-min);
   transition: margin-left 0.2s ease;
   max-width: 1100px;
 }
@@ -420,193 +447,381 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.925rem;
 }
 
+.flash-exito {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
 
-/* --- Botones --- */
-.btn {
+.flash-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+/* --- Componentes compartidos + módulo proveedores ---
+   Los estilos los introdujo el módulo de proveedores; cada regla
+   lleva además un nombre genérico (sin el prefijo .prov-) para que
+   inventario, ventas y facturas reutilicen el MISMO diseño sin
+   duplicar CSS. Las plantillas de proveedores siguen funcionando. */
+   Reutiliza .panel, .tabla, .vacio y .seccion-titulo del sistema general;
+   aquí solo van las piezas propias del módulo. */
+.encabezado,
+.prov-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.encabezado h1,
+.prov-encabezado h1 {
+  margin: 0 0 0.25rem;
+}
+
+.encabezado .subtitulo,
+.prov-encabezado .subtitulo {
+  margin: 0;
+}
+
+.filtros,
+.prov-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtros input[type="search"],
+.prov-filtros input[type="search"] {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.filtros input,
+.prov-filtros input,
+.filtros select,
+.prov-filtros select,
+.input,
+.prov-input {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  font: inherit;
+  background: var(--color-superficie);
+  color: var(--color-texto);
+}
+
+.filtros input:focus,
+.prov-filtros input:focus,
+.filtros select:focus,
+.prov-filtros select:focus,
+.input:focus,
+.prov-input:focus {
+  outline: 2px solid var(--color-marca);
+  outline-offset: -1px;
+  border-color: var(--color-marca);
+}
+
+.input,
+.prov-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-error,
+.prov-input-error {
+  border-color: #dc2626;
+}
+
+.boton,
+.prov-boton {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 0.9rem;
   border: 1px solid var(--color-borde);
-  border-radius: 0.5rem;
+  border-radius: var(--radio);
   background: var(--color-superficie);
   color: var(--color-texto);
-  font-size: 0.875rem;
+  font: inherit;
   font-weight: 600;
-  font-family: inherit;
   text-decoration: none;
   cursor: pointer;
 }
 
-.btn:hover {
+.boton:hover,
+.prov-boton:hover {
   background: var(--color-fondo);
 }
 
-.btn-primario {
-  background: var(--color-marca);
-  border-color: var(--color-marca);
-  color: #ffffff;
-}
-
-.btn-primario:hover {
-  background: #1d4ed8;
-}
-
-.btn-peligro {
-  color: #b91c1c;
-  border-color: #fecaca;
-  background: #fef2f2;
-}
-
-.btn-peligro:hover {
-  background: #fee2e2;
-}
-
-.btn-icono {
-  padding: 0.35rem 0.5rem;
-}
-
-.btn-icono .icono {
+.boton .icono,
+.prov-boton .icono {
   width: 1.05rem;
   height: 1.05rem;
 }
 
-/* --- Barra de acciones (buscador + botón agregar) --- */
-.barra-acciones {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+.boton-primario,
+.prov-boton-primario {
+  background: var(--color-marca);
+  border-color: var(--color-marca);
+  color: #fff;
 }
 
-.buscador {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1 1 260px;
-  max-width: 420px;
-  padding: 0 0.75rem;
-  background: var(--color-superficie);
-  border: 1px solid var(--color-borde);
-  border-radius: 0.5rem;
+.boton-primario:hover,
+.prov-boton-primario:hover {
+  background: #1d4ed8;
 }
 
-.buscador .icono {
-  color: var(--color-texto-suave);
-  flex: none;
-}
-
-.buscador input {
-  flex: 1;
-  min-width: 0;
-  padding: 0.55rem 0;
-  border: none;
-  outline: none;
+.boton-plano,
+.prov-boton-plano {
   background: transparent;
-  font: inherit;
-  font-size: 0.925rem;
-  color: inherit;
-}
-
-/* --- Formularios --- */
-.formulario {
-  display: grid;
-  gap: 1rem;
-  padding: 1.25rem;
-  max-width: 560px;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.campo label {
-  font-size: 0.8125rem;
-  font-weight: 600;
+  border-color: transparent;
   color: var(--color-texto-suave);
 }
 
-.campo input,
-.campo select,
-.campo textarea {
-  padding: 0.55rem 0.7rem;
-  border: 1px solid var(--color-borde);
-  border-radius: 0.5rem;
+.boton-peligro,
+.prov-boton-peligro {
   background: var(--color-superficie);
-  font: inherit;
-  font-size: 0.925rem;
-  color: inherit;
-}
-
-.campo input:focus,
-.campo select:focus,
-.campo textarea:focus {
-  outline: 2px solid var(--color-marca);
-  outline-offset: -1px;
-}
-
-.campo .error {
-  font-size: 0.8125rem;
+  border-color: #fecaca;
   color: #b91c1c;
 }
 
-.campo-fila {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.boton-peligro:hover,
+.prov-boton-peligro:hover {
+  background: #fef2f2;
 }
 
-.formulario-acciones {
-  display: flex;
-  gap: 0.6rem;
-  margin-top: 0.5rem;
+/* La tabla tiene muchas columnas: se desplaza dentro del panel en vez de
+   desbordar la página. */
+.tabla-scroll,
+.prov-tabla-scroll {
+  overflow-x: auto;
 }
 
-/* --- Acciones dentro de la tabla --- */
-.tabla .acciones {
-  display: flex;
-  gap: 0.4rem;
-  justify-content: flex-end;
+.tabla-scroll .tabla,
+.prov-tabla-scroll .tabla {
+  min-width: 780px;
 }
 
-.tabla .acciones form {
+/* Con 7 columnas el padding por defecto de .tabla no cabe en el ancho útil. */
+.tabla-scroll .tabla th,
+.prov-tabla-scroll .tabla th,
+.tabla-scroll .tabla td,
+.prov-tabla-scroll .tabla td {
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.tabla-scroll .tabla th:first-child,
+.prov-tabla-scroll .tabla th:first-child,
+.tabla-scroll .tabla td:first-child,
+.prov-tabla-scroll .tabla td:first-child {
+  padding-left: 1.25rem;
+}
+
+.tabla-scroll .tabla th:last-child,
+.prov-tabla-scroll .tabla th:last-child,
+.tabla-scroll .tabla td:last-child,
+.prov-tabla-scroll .tabla td:last-child {
+  padding-right: 1.25rem;
+}
+
+.col-nombre,
+.prov-col-nombre {
+  white-space: nowrap;
+}
+
+.acciones-fila,
+.prov-acciones-fila {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.acciones-fila form,
+.prov-acciones-fila form {
   display: inline;
 }
 
-.etiqueta-stock {
+.enlace-peligro,
+.prov-enlace-peligro {
+  border: 0;
+  background: none;
+  padding: 0 0 0 0.6rem;
+  font: inherit;
+  color: #b91c1c;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.estado,
+.prov-estado {
   display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.estado-activo,
+.prov-estado-activo {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.estado-inactivo,
+.prov-estado-inactivo {
+  background: var(--color-fondo);
+  color: var(--color-texto-suave);
+}
+
+.formulario,
+.prov-formulario {
+  max-width: 660px;
+}
+
+.formulario fieldset,
+.prov-formulario fieldset {
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  padding: 1rem 1.25rem 1.25rem;
+  margin: 0 0 1.25rem;
+}
+
+.formulario legend,
+.prov-formulario legend {
+  padding: 0 0.4rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.campo,
+.prov-campo {
+  margin-bottom: 0.875rem;
+}
+
+.campo label,
+.prov-campo label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.campo-medio .input,
+.prov-campo-medio .prov-input {
+  max-width: 320px;
+}
+
+.campo-check label,
+.prov-campo-check label {
+  display: inline;
+}
+
+.campo textarea.input,
+.prov-campo textarea.prov-input {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.error,
+.prov-error {
+  display: block;
+  margin-top: 0.3rem;
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.acciones,
+.prov-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.ficha,
+.prov-ficha {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 0.65rem 1rem;
+  margin: 0;
+  padding: 1.25rem;
+}
+
+.ficha dt,
+.prov-ficha dt {
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.ficha dd,
+.prov-ficha dd {
+  margin: 0;
+}
+
+.notas,
+.prov-notas {
+  white-space: pre-wrap;
+}
+
+@media (max-width: 560px) {
+  .ficha,
+  .prov-ficha {
+    grid-template-columns: 1fr;
+  }
+
+  .ficha dd,
+  .prov-ficha dd {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* --- Menú colapsado: el perfil se reduce para caber en el riel --- */
+body:not(.menu-abierto) .sidebar-perfil-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+body:not(.menu-abierto) .sidebar-perfil-avatar .icono {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* --- Inventario (prefijo .inv-) --- */
+.inv-stock {
+  display: inline-block;
+  min-width: 2.5rem;
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
+  text-align: center;
   font-size: 0.8125rem;
   font-weight: 600;
 }
 
-.etiqueta-stock.bajo {
+.inv-stock-bajo {
   background: #fef2f2;
   color: #b91c1c;
 }
 
-.etiqueta-stock.ok {
+.inv-stock-ok {
   background: #ecfdf5;
   color: #047857;
 }
 
-.flash-success {
-  background: #ecfdf5;
-  border-color: #a7f3d0;
-}
-
-.flash-danger {
-  background: #fef2f2;
-  border-color: #fecaca;
+.inv-sin-dato {
+  color: var(--color-texto-suave);
 }
 
 /* --- Color de los iconos por sección ---
-   Va al final del archivo a propósito: así gana sobre los colores por
-   defecto de tarjetas, paneles y títulos (misma especificidad, va después). */
+   Va al final a propósito: así gana sobre los colores por defecto de
+   tarjetas, paneles y títulos (misma especificidad, declarado después). */
 .icono.icono--dashboard { color: #2563eb; }
 .icono.icono--facturas { color: #7c3aed; }
 .icono.icono--inventario { color: #d97706; }
@@ -618,7 +833,6 @@ body.menu-abierto .sidebar-overlay {
 .icono.icono--reloj { color: #0891b2; }
 .icono.icono--editar { color: #2563eb; }
 .icono.icono--eliminar { color: #dc2626; }
-.icono.icono--agregar { color: #ffffff; }
 
 /* En el menú oscuro se usan tonos más claros para que contrasten */
 .sidebar .icono.icono--dashboard { color: #60a5fa; }
@@ -634,3 +848,7 @@ body.menu-abierto .sidebar-overlay {
 .sidebar a.activo .icono.icono--inventario,
 .sidebar a.activo .icono.icono--ventas,
 .sidebar a.activo .icono.icono--proveedores { color: #ffffff; }
+
+/* Botón primario: su icono va en blanco como el texto */
+.boton-primario .icono,
+.prov-boton-primario .icono { color: #ffffff; }

@@ -23,6 +23,6 @@ def logout():
     """Cierra la sesión. Sin @login_required para que el enlace del menú
     funcione siempre y no rebote cuando no hay sesión activa."""
     logout_user()
-    flash("Sesión cerrada correctamente.", "info")
+    flash("Sesión cerrada correctamente.", "exito")
     # TODO (Persona A): cuando exista el login real, redirigir a auth.login.
     return redirect(url_for("main.dashboard"))

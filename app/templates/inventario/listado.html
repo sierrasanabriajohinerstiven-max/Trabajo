@@ -1,32 +1,43 @@
 {% extends "base.html" %}
 {% block title %}Inventario{% endblock %}
 {% block content %}
-  <h1 class="seccion-titulo">
-    <svg class="icono icono--inventario"><use href="#i-inventario"></use></svg> Inventario
-  </h1>
-  <p class="subtitulo">
-    {{ productos|length }} producto{{ '' if productos|length == 1 else 's' }}
-    {% if busqueda %}encontrado{{ '' if productos|length == 1 else 's' }} para «{{ busqueda }}»{% endif %}
-  </p>
-
-  <div class="barra-acciones">
-    <form class="buscador" method="get" action="{{ url_for('inventario.index') }}">
-      <svg class="icono"><use href="#i-buscar"></use></svg>
-      <input type="search" name="q" value="{{ busqueda }}"
-             placeholder="Buscar por nombre o código..." aria-label="Buscar productos">
-    </form>
-
-    {% if busqueda %}
-      <a class="btn" href="{{ url_for('inventario.index') }}">Limpiar</a>
-    {% endif %}
-
-    <a class="btn btn-primario" href="{{ url_for('inventario.nuevo') }}">
-      <svg class="icono icono--agregar"><use href="#i-agregar"></use></svg> Agregar producto
+  <div class="encabezado">
+    <div>
+      <h1 class="seccion-titulo">
+        <svg class="icono icono--inventario"><use href="#i-inventario"></use></svg> Inventario
+      </h1>
+      <p class="subtitulo">
+        {{ total }} producto{{ '' if total == 1 else 's' }} ·
+        {{ total_activos }} activo{{ '' if total_activos == 1 else 's' }} ·
+        valor en bodega $ {{ "{:,.2f}".format(valor_total) }}
+      </p>
+    </div>
+    <a class="boton boton-primario" href="{{ url_for('inventario.nuevo') }}">
+      <svg class="icono"><use href="#i-agregar"></use></svg> Nuevo producto
     </a>
   </div>
 
+  <form class="filtros" method="get" action="{{ url_for('inventario.index') }}">
+    <input
+      type="search"
+      name="q"
+      value="{{ termino }}"
+      aria-label="Buscar productos"
+      placeholder="Buscar por nombre, código o proveedor">
+    <select name="estado" aria-label="Filtrar por estado">
+      {% for valor, texto in estados %}
+        <option value="{{ valor }}" {{ 'selected' if valor == estado }}>{{ texto }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="boton">Filtrar</button>
+    {% if termino or estado != 'todos' %}
+      <a class="boton boton-plano" href="{{ url_for('inventario.index') }}">Limpiar</a>
+    {% endif %}
+  </form>
+
   <div class="panel">
     {% if productos %}
+      <div class="tabla-scroll">
       <table class="tabla">
         <thead>
           <tr>
@@ -36,49 +47,60 @@
             <th class="numero">Precio</th>
             <th class="numero">Stock</th>
             <th class="numero">Valor</th>
-            <th></th>
+            <th>Estado</th>
+            <th class="acciones-fila">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {% for producto in productos %}
             <tr>
-              <td>
-                <strong>{{ producto.nombre }}</strong>
-                {% if not producto.activo %}<small> (inactivo)</small>{% endif %}
-              </td>
+              <td class="col-nombre">{{ producto.nombre }}</td>
               <td>{{ producto.sku or '—' }}</td>
-              <td>{{ producto.proveedor.nombre if producto.proveedor else '—' }}</td>
+              <td>
+                {% if producto.proveedor %}
+                  <a href="{{ url_for('proveedores.detalle', proveedor_id=producto.proveedor.id) }}">
+                    {{ producto.proveedor.nombre }}
+                  </a>
+                {% else %}
+                  <span class="inv-sin-dato">—</span>
+                {% endif %}
+              </td>
               <td class="numero">$ {{ "{:,.2f}".format(producto.precio) }}</td>
               <td class="numero">
-                <span class="etiqueta-stock {{ 'bajo' if producto.stock <= 5 else 'ok' }}">
+                <span class="inv-stock {{ 'inv-stock-bajo' if producto.stock <= stock_bajo else 'inv-stock-ok' }}">
                   {{ producto.stock }}
                 </span>
               </td>
               <td class="numero">$ {{ "{:,.2f}".format(producto.valor_en_stock) }}</td>
               <td>
-                <div class="acciones">
-                  <a class="btn btn-icono" title="Editar"
-                     href="{{ url_for('inventario.editar', producto_id=producto.id) }}">
-                    <svg class="icono icono--editar"><use href="#i-editar"></use></svg>
-                  </a>
-                  <form method="post"
-                        action="{{ url_for('inventario.eliminar', producto_id=producto.id) }}"
-                        onsubmit="return confirm('¿Eliminar «{{ producto.nombre }}»? Esta acción no se puede deshacer.');">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-icono btn-peligro" type="submit" title="Eliminar">
-                      <svg class="icono icono--eliminar"><use href="#i-eliminar"></use></svg>
-                    </button>
-                  </form>
-                </div>
+                <span class="estado estado-{{ 'activo' if producto.activo else 'inactivo' }}">
+                  {{ producto.estado }}
+                </span>
+              </td>
+              <td class="acciones-fila">
+                <a href="{{ url_for('inventario.editar', producto_id=producto.id) }}">Editar</a>
+                <form
+                  method="post"
+                  action="{{ url_for('inventario.eliminar', producto_id=producto.id) }}"
+                  onsubmit="return confirm('¿Eliminar «{{ producto.nombre }}»? Esta acción no se puede deshacer.');">
+                  {{ form_eliminar.hidden_tag() }}
+                  <button type="submit" class="enlace-peligro">Eliminar</button>
+                </form>
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-    {% elif busqueda %}
-      <p class="vacio">No hay productos que coincidan con «{{ busqueda }}».</p>
+      </div>
     {% else %}
-      <p class="vacio">Todavía no hay productos registrados. Agrega el primero.</p>
+      <p class="vacio">
+        {% if termino or estado != 'todos' %}
+          Ningún producto coincide con la búsqueda.
+        {% else %}
+          Todavía no hay productos en el inventario.
+          <a href="{{ url_for('inventario.nuevo') }}">Agrega el primero</a>.
+        {% endif %}
+      </p>
     {% endif %}
   </div>
 {% endblock %}
