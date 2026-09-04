@@ -412,7 +412,19 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.925rem;
 }
 
-/* --- Ventas (Persona C) --- */
+.flash-exito {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.flash-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+/* --- Ventas (prefijo .venta-) --- */
 .venta-encabezado {
   display: flex;
   align-items: flex-start;
@@ -496,3 +508,270 @@ body.menu-abierto .sidebar-overlay {
   font-size: 0.9rem;
 }
 
+/* --- Módulo proveedores (prefijo .prov-) ---
+   Reutiliza .panel, .tabla, .vacio y .seccion-titulo del sistema general;
+   aquí solo van las piezas propias del módulo. */
+.prov-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.prov-encabezado h1 {
+  margin: 0 0 0.25rem;
+}
+
+.prov-encabezado .subtitulo {
+  margin: 0;
+}
+
+.prov-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.prov-filtros input[type="search"] {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.prov-filtros input,
+.prov-filtros select,
+.prov-input {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  font: inherit;
+  background: var(--color-superficie);
+  color: var(--color-texto);
+}
+
+.prov-filtros input:focus,
+.prov-filtros select:focus,
+.prov-input:focus {
+  outline: 2px solid var(--color-marca);
+  outline-offset: -1px;
+  border-color: var(--color-marca);
+}
+
+.prov-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.prov-input-error {
+  border-color: #dc2626;
+}
+
+.prov-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.prov-boton:hover {
+  background: var(--color-fondo);
+}
+
+.prov-boton .icono {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.prov-boton-primario {
+  background: var(--color-marca);
+  border-color: var(--color-marca);
+  color: #fff;
+}
+
+.prov-boton-primario:hover {
+  background: #1d4ed8;
+}
+
+.prov-boton-plano {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-texto-suave);
+}
+
+.prov-boton-peligro {
+  background: var(--color-superficie);
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.prov-boton-peligro:hover {
+  background: #fef2f2;
+}
+
+/* La tabla tiene muchas columnas: se desplaza dentro del panel en vez de
+   desbordar la página. */
+.prov-tabla-scroll {
+  overflow-x: auto;
+}
+
+.prov-tabla-scroll .tabla {
+  min-width: 780px;
+}
+
+/* Con 7 columnas el padding por defecto de .tabla no cabe en el ancho útil. */
+.prov-tabla-scroll .tabla th,
+.prov-tabla-scroll .tabla td {
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.prov-tabla-scroll .tabla th:first-child,
+.prov-tabla-scroll .tabla td:first-child {
+  padding-left: 1.25rem;
+}
+
+.prov-tabla-scroll .tabla th:last-child,
+.prov-tabla-scroll .tabla td:last-child {
+  padding-right: 1.25rem;
+}
+
+.prov-col-nombre {
+  white-space: nowrap;
+}
+
+.prov-acciones-fila {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.prov-acciones-fila form {
+  display: inline;
+}
+
+.prov-enlace-peligro {
+  border: 0;
+  background: none;
+  padding: 0 0 0 0.6rem;
+  font: inherit;
+  color: #b91c1c;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.prov-estado {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.prov-estado-activo {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.prov-estado-inactivo {
+  background: var(--color-fondo);
+  color: var(--color-texto-suave);
+}
+
+.prov-formulario {
+  max-width: 660px;
+}
+
+.prov-formulario fieldset {
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  padding: 1rem 1.25rem 1.25rem;
+  margin: 0 0 1.25rem;
+}
+
+.prov-formulario legend {
+  padding: 0 0.4rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.prov-campo {
+  margin-bottom: 0.875rem;
+}
+
+.prov-campo label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.prov-campo-medio .prov-input {
+  max-width: 320px;
+}
+
+.prov-campo-check label {
+  display: inline;
+}
+
+.prov-campo textarea.prov-input {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.prov-error {
+  display: block;
+  margin-top: 0.3rem;
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.prov-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.prov-ficha {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 0.65rem 1rem;
+  margin: 0;
+  padding: 1.25rem;
+}
+
+.prov-ficha dt {
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.prov-ficha dd {
+  margin: 0;
+}
+
+.prov-notas {
+  white-space: pre-wrap;
+}
+
+@media (max-width: 560px) {
+  .prov-ficha {
+    grid-template-columns: 1fr;
+  }
+
+  .prov-ficha dd {
+    margin-bottom: 0.5rem;
+  }
+}
