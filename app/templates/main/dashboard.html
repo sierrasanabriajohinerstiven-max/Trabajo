@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+  <h1>Panel principal</h1>
+  <p>Elige una sección:</p>
+
+  <div class="dashboard-grid">
+    {% for texto, endpoint, icono in secciones %}
+      <a class="dashboard-card" href="{{ url_for(endpoint) }}">
+        <span class="dashboard-card-icono">{{ icono }}</span>
+        <span class="dashboard-card-texto">{{ texto }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}

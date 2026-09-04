@@ -23,6 +23,10 @@ def create_app(config_class: type = Config) -> Flask:
     from app.models import usuario  # noqa: F401
 
     # --- Blueprints ---
+    # Dashboard / menú principal (compartido)
+    from app.main import bp as main_bp
+    app.register_blueprint(main_bp)
+
     # Persona A - Login / Autenticación
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix="/auth")
